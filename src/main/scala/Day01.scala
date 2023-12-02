@@ -1,13 +1,8 @@
-import scala.io.Source
+import util.Input
 
 //noinspection TypeAnnotation
 trait Day01 {
-  lazy val data =
-    Source
-      .fromInputStream(getClass.getResourceAsStream("input_01.txt"))
-      .getLines()
-      .map(_.trim)
-      .to(LazyList)
+  lazy val data = Input.read("input_01.txt")
 }
 
 //noinspection ScalaWeakerAccess
