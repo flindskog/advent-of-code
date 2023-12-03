@@ -4,7 +4,6 @@ enum Color {
   case red, green, blue
 }
 
-//noinspection TypeAnnotation,ScalaWeakerAccess
 trait Day02 {
   val data = Input.read("input_02.txt")
 
@@ -30,7 +29,6 @@ trait Day02 {
     }
 }
 
-//noinspection ScalaWeakerAccess
 object Day02_1 extends App with Day02 {
   val dices = Map(
     Color.red   -> 12,
@@ -49,7 +47,6 @@ object Day02_1 extends App with Day02 {
   println(validGames.map((game, _) => game).sum)
 }
 
-//noinspection ScalaWeakerAccess
 object Day02_2 extends App with Day02 {
   val minDices = games.map { (game, sets) =>
     val dices = sets.flatten

@@ -1,11 +1,9 @@
 import util.Input
 
-//noinspection TypeAnnotation
 trait Day01 {
   lazy val data = Input.read("input_01.txt")
 }
 
-//noinspection ScalaWeakerAccess
 object Day01_1 extends App with Day01 {
   val result =
     (data.map(_.find(_.isDigit)) zip data.map(_.findLast(_.isDigit))).flatMap { case (f, l) =>
@@ -18,9 +16,8 @@ object Day01_1 extends App with Day01 {
   println(result.sum)
 }
 
-//noinspection ScalaWeakerAccess
 object Day01_2 extends App with Day01 {
-  val numberRegex = """(?=(1|2|3|4|5|6|7|8|9|0|one|two|three|four|five|six|seven|eight|nine|zero))""".r
+  val numberRegex = "(?=(1|2|3|4|5|6|7|8|9|0|one|two|three|four|five|six|seven|eight|nine|zero))".r
   val numberMap = Map(
     "one"   -> "1",
     "two"   -> "2",
