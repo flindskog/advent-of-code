@@ -1,7 +1,7 @@
 import util.Input
 
 trait Day01 {
-  lazy val data = Input.read("input_01.txt")
+  val data = Input.read("input_01.txt")
 }
 
 object Day01_1 extends App with Day01 {

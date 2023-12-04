@@ -8,8 +8,7 @@ lazy val root = project
       "-no-indent"
     ),
     libraryDependencies ++= Seq(
-      "org.scalatest"          %% "scalatest-flatspec"       % "3.2.17" % Test,
-      "org.scalatest"          %% "scalatest-shouldmatchers" % "3.2.17" % Test,
-      "org.scala-lang.modules" %% "scala-swing"              % "3.0.0"
+      "org.scalatest" %% "scalatest-flatspec"       % "3.2.17" % Test,
+      "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.17" % Test
     )
   )
