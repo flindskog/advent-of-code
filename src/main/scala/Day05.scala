@@ -35,11 +35,15 @@ trait Day05 {
   val seeds = data.head.head.split(" ").toList.tail.map(_.toLong)
 
   val mappings = data.tail.map { lines =>
-    val regex                 = """(\w+)-to-(\w+) map:""".r
-    val regex(srcCat, dstCat) = lines.head
+    val regex = """(\w+)-to-(\w+) map:""".r
+    val (srcCat, dstCat) = lines.head match {
+      case regex(src, dst) => (src, dst)
+    }
     val ranges = lines.tail.map { line =>
-      val regex                             = """(\d+) (\d+) (\d+)""".r
-      val regex(dstStart, srcStart, length) = line
+      val regex = """(\d+) (\d+) (\d+)""".r
+      val (dstStart, srcStart, length) = line match {
+        case regex(dstStart, srcStart, length) => (dstStart, srcStart, length)
+      }
       Range(dstStart.toLong, srcStart.toLong, length.toLong)
     }
     (srcCat, Mapping(srcCat, dstCat, ranges))
@@ -73,7 +77,13 @@ object Day05_1 extends App with Day05 {
 }
 
 object Day05_2 extends App with Day05 {
-  val rangeSeeds = seeds.grouped(2).map { case Seq(a, b) => (a, b) }.toSeq
+  val rangeSeeds = seeds
+    .grouped(2)
+    .map {
+      case Seq(a, b) => (a, b)
+      case v         => sys.error(s"Unexpected grouping $v")
+    }
+    .toSeq
   val infiniteSeq: LazyList[Long] = {
     def loop(v: Long): LazyList[Long] = v #:: loop(v + 1)
     loop(0)
