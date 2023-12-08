@@ -1,7 +1,9 @@
-import util.Input
+package aoc.y2023
+
+import aoc.utils
+import aoc.utils.Input
 
 import scala.annotation.tailrec
-import scala.collection.mutable
 
 enum Direction {
   case Left, Right
@@ -10,7 +12,7 @@ enum Direction {
 case class Node(value: String, left: String, right: String)
 
 trait Day08 {
-  val data = Input.read("input_08.txt")
+  val data = Input.read("2023/input_08.txt")
   val directionData =
     data.head.map {
       case 'L' => Direction.Left
@@ -57,24 +59,12 @@ object Day08_2 extends App with Day08 {
     (from, step) #:: zPath(next, directions.tail, step + 1)
   }
 
-  def lcm(numbers: List[BigInt]): BigInt = {
-    @tailrec
-    def gcd(a: BigInt, b: BigInt): BigInt =
-      if (b == 0) a else gcd(b, a % b)
-
-    def lcm(a: BigInt, b: BigInt): BigInt =
-      if (a == 0 || b == 0) 0
-      else a * b / gcd(a, b)
-
-    numbers.reduce(lcm)
-  }
-
   val zDistances = startNodes
     .flatMap(node => zPath(node, directions).filter { case (node, _) => node.endsWith("Z") }.take(1))
-    .map { case (_, step) => BigInt(step) }
+    .map { case (_, step) => step.toLong }
     .toList
 
-  // By occular inspection it could be figured out that the path is a loop!
+  // By ocular inspection it could be figured out that the path is a loop!
   // Solving problems by coincidence!!!
-  println(lcm(zDistances)) // 10921547990923
+  println(utils.Math.lcm(zDistances)) // 10921547990923
 }

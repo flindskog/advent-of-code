@@ -1,4 +1,4 @@
-package util
+package aoc.utils
 
 import scala.io.Source
 

@@ -1,7 +1,9 @@
-import util.Input
+package aoc.y2023
+
+import aoc.utils.Input
 
 trait Day04 {
-  val data  = Input.read("input_04.txt")
+  val data  = Input.read("2023/input_04.txt")
   val regex = """Card +\d+: +([\d ]+) \| +([\d ]+)""".r
 
   val wins = data.flatMap(s =>

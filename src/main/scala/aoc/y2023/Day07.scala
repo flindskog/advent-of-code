@@ -1,4 +1,6 @@
-import util.Input
+package aoc.y2023
+
+import aoc.utils.Input
 
 import scala.annotation.tailrec
 
@@ -48,7 +50,7 @@ case class FiveOfAKind(cards: String) extends Hand {
 }
 
 trait Day07 {
-  val data = Input.read("input_07.txt")
+  val data = Input.read("2023/input_07.txt")
   val cardsAndBids = data.map { str =>
     val Array(cards, bid) = str.split(" +")
     cards
@@ -106,7 +108,7 @@ object Day07_2 extends App with Day07 {
     .map(x => parseHandWithJoker(x._1) -> x._2)
     .sortBy(_._1)
     .zipWithIndex
-  
+
   val result = hands.map { case ((_, bid), index) => bid * (index + 1) }.sum
   println(result) // 253499763
 }

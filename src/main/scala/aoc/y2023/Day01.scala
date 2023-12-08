@@ -1,7 +1,11 @@
-import util.Input
+package aoc.y2023
+
+import aoc.utils.Input
+import aoc.y2023.Day01_1.data
+import aoc.y2023.Day01_2.data
 
 trait Day01 {
-  val data = Input.read("input_01.txt")
+  val data = Input.read("2023/input_01.txt")
 }
 
 object Day01_1 extends App with Day01 {

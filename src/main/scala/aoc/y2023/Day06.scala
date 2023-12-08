@@ -1,9 +1,11 @@
-import util.Input
+package aoc.y2023
+
+import aoc.utils.Input
 
 import scala.annotation.tailrec
 
 trait Day06 {
-  val data           = Input.read("input_06.txt").toList
+  val data           = Input.read("2023/input_06.txt").toList
   val times          = data(0).dropWhile(_ != ':').tail.trim.split(" +").map(_.toInt)
   val records        = data(1).dropWhile(_ != ':').tail.trim.split(" +").map(_.toInt)
   val timeAndRecords = times.zip(records)

@@ -1,11 +1,13 @@
-import util.Input
+package aoc.y2023
+
+import aoc.utils.Input
 
 enum Color {
   case red, green, blue
 }
 
 trait Day02 {
-  val data = Input.read("input_02.txt")
+  val data = Input.read("2023/input_02.txt")
 
   val regex = "^Game (\\d+): (.*)$".r
 

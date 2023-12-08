@@ -1,4 +1,6 @@
-import util.Input
+package aoc.y2023
+
+import aoc.utils.Input
 
 import scala.annotation.tailrec
 
@@ -27,7 +29,7 @@ case class Mapping(srcCat: String, dstCat: String, ranges: Seq[Range]) {
 }
 
 trait Day05 {
-  val data = Input.read("input_05.txt").foldLeft(Seq(Seq.empty[String])) { (acc, line) =>
+  val data = Input.read("2023/input_05.txt").foldLeft(Seq(Seq.empty[String])) { (acc, line) =>
     if (line.isEmpty) acc :+ Seq()
     else acc.init :+ (acc.lastOption.getOrElse(Seq()) :+ line)
   }

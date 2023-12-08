@@ -1,4 +1,6 @@
-import util.Input
+package aoc.y2023
+
+import aoc.utils.Input
 
 import scala.annotation.tailrec
 
@@ -24,7 +26,7 @@ extension (grid: Array[Array[Char]]) {
 }
 
 trait Day03 {
-  val grid = Input.read("input_03.txt").map(_.toCharArray).to(Array)
+  val grid = Input.read("2023/input_03.txt").map(_.toCharArray).to(Array)
 
   @tailrec
   final def parsePartNumbers(
