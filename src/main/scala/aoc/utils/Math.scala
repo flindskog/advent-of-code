@@ -2,7 +2,7 @@ package aoc.utils
 
 import scala.annotation.tailrec
 
-object Math {
+object Math:
 
   /**
    * Calculates the greatest common divisor of two numbers.
@@ -13,7 +13,7 @@ object Math {
    */
   @tailrec
   def gcd(a: Long, b: Long): Long =
-    if (b == 0) a else gcd(b, a % b)
+    if b == 0 then a else gcd(b, a % b)
 
   /**
    * Calculates the least common multiple of two numbers.
@@ -22,7 +22,7 @@ object Math {
    * @return least common multiple
    */
   def lcm(a: Long, b: Long): Long =
-    if (a == 0 || b == 0) 0
+    if a == 0 || b == 0 then 0
     else scala.math.abs(a * b) / gcd(a, b)
 
   /**
@@ -32,4 +32,3 @@ object Math {
    */
   def lcm(numbers: List[Long]): Long =
     numbers.reduce(lcm)
-}
