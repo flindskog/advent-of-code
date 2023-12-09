@@ -2,11 +2,10 @@ package aoc.y2023
 
 import aoc.utils.Input
 
-trait Day04:
-  val data  = Input.read("2023/input_04.txt")
+object Day04 extends Aoc2023("input_04.txt"):
   val regex = """Card +\d+: +([\d ]+) \| +([\d ]+)""".r
 
-  val wins = data.flatMap: s =>
+  val wins = input.flatMap: s =>
     regex
       .findAllMatchIn(s)
       .map: m =>
@@ -15,11 +14,9 @@ trait Day04:
         (winning intersect my).size
       .toList
 
-object Day04_1 extends App with Day04:
   val points = wins.map(w => Math.pow(2, w - 1).toInt)
   println(points.sum)
 
-object Day04_2 extends App with Day04:
   val acc = (Map[Int, Int]().withDefault(_ => 0), Map[Int, Int]().withDefault(_ => 0))
   val (result, _) = wins.zipWithIndex.foldLeft(acc) { case ((accWins, futureWins), (wins, idx)) =>
     val multiplier = 1 + futureWins(idx)

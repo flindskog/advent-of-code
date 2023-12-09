@@ -1,23 +1,18 @@
 package aoc.y2023
 
+import aoc.Aoc
 import aoc.utils.Input
-import aoc.y2023.Day01_1.data
-import aoc.y2023.Day01_2.data
 
-trait Day01:
-  val data = Input.read("2023/input_01.txt")
-
-object Day01_1 extends App with Day01:
-  val result =
-    (data.map(_.find(_.isDigit)) zip data.map(_.findLast(_.isDigit))).flatMap { case (f, l) =>
+object Day01 extends Aoc2023("input_01.txt"):
+  val result1 =
+    (input.map(_.find(_.isDigit)) zip input.map(_.findLast(_.isDigit))).flatMap { case (f, l) =>
       (f, l) match
         case (Some(f), Some(l)) => Some((f.toString + l.toString).toInt)
         case _                  => None
     }
 
-  println(result.sum)
+  println(result1.sum)
 
-object Day01_2 extends App with Day01:
   val numberRegex = "(?=(1|2|3|4|5|6|7|8|9|0|one|two|three|four|five|six|seven|eight|nine|zero))".r
   val numberMap = Map(
     "one"   -> "1",
@@ -31,7 +26,7 @@ object Day01_2 extends App with Day01:
     "nine"  -> "9",
     "zero"  -> "0"
   )
-  val result = data
+  val result2 = input
     .map: s =>
       numberRegex.findAllMatchIn(s).map(_.group(1)).toList
     .map: r =>
@@ -39,4 +34,4 @@ object Day01_2 extends App with Day01:
     .map: (f, l) =>
       (f + l).toInt
 
-  println(result.sum)
+  println(result2.sum)

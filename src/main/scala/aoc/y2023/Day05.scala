@@ -22,9 +22,8 @@ case class Mapping(srcCat: String, dstCat: String, ranges: Seq[Range]):
   def source(destination: Long): Long =
     ranges.find(_.source(destination).isDefined).map(_.source(destination).get).getOrElse(destination)
 
-trait Day05:
-  val data = Input
-    .read("2023/input_05.txt")
+object Day05 extends Aoc2023("input_05.txt"):
+  val data = input
     .foldLeft(Seq(Seq.empty[String])): (acc, line) =>
       if line.isEmpty then acc :+ Seq()
       else acc.init :+ (acc.lastOption.getOrElse(Seq()) :+ line)
@@ -64,13 +63,10 @@ trait Day05:
       val mapping = reverseMappings(src)
       val mapped  = mapping.source(n)
       reverseMap(mapping.srcCat, dst, mapped)
-end Day05
 
-object Day05_1 extends App with Day05:
   val mapped = mapTo("seed", "location", seeds)
   println(mapped.min)
 
-object Day05_2 extends App with Day05:
   val rangeSeeds = seeds
     .grouped(2)
     .map:

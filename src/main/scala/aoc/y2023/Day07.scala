@@ -45,9 +45,8 @@ case class FourOfAKind(cards: String) extends Hand:
 case class FiveOfAKind(cards: String) extends Hand:
   override def withCards(cards: String): Hand = copy(cards = cards)
 
-trait Day07:
-  val data = Input.read("2023/input_07.txt")
-  val cardsAndBids = data.map { str =>
+object Day07 extends Aoc2023("input_07.txt"):
+  val cardsAndBids = input.map { str =>
     val Array(cards, bid) = str.split(" +")
     cards
       .replaceAll("A", "E")
@@ -74,9 +73,7 @@ trait Day07:
           case _            => OnePair(cards)
       case 1 => HighCard(cards)
   }
-end Day07
 
-object Day07_1 extends App with Day07:
   val result = cardsAndBids
     .map(x => parseHand(x._1) -> x._2)
     .sortBy(_._1)
@@ -85,7 +82,6 @@ object Day07_1 extends App with Day07:
 
   println(result.sum) // 252656917
 
-object Day07_2 extends App with Day07:
   val cardsNoJoker = "23456789ACDE"
   def parseHandWithJoker(cards: String): Hand =
     cardsNoJoker
@@ -101,5 +97,5 @@ object Day07_2 extends App with Day07:
     .sortBy(_._1)
     .zipWithIndex
 
-  val result = hands.map { case ((_, bid), index) => bid * (index + 1) }.sum
-  println(result) // 253499763
+  val result2 = hands.map { case ((_, bid), index) => bid * (index + 1) }.sum
+  println(result2) // 253499763

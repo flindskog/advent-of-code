@@ -4,13 +4,11 @@ import aoc.utils.Input
 
 import scala.annotation.tailrec
 
-trait Day06:
-  val data           = Input.read("2023/input_06.txt").toList
-  val times          = data(0).dropWhile(_ != ':').tail.trim.split(" +").map(_.toInt)
-  val records        = data(1).dropWhile(_ != ':').tail.trim.split(" +").map(_.toInt)
+object Day06 extends Aoc2023("input_06.txt"):
+  val times          = input.head.dropWhile(_ != ':').tail.trim.split(" +").map(_.toInt)
+  val records        = input(1).dropWhile(_ != ':').tail.trim.split(" +").map(_.toInt)
   val timeAndRecords = times.zip(records)
 
-object Day06_1 extends App with Day06:
   val result = timeAndRecords
     .map: (time, record) =>
       (0 until time)
@@ -19,9 +17,6 @@ object Day06_1 extends App with Day06:
         .count(_ > record)
     .product
 
-  println(result)
-
-object Day06_2 extends App with Day06:
   val time   = times.foldLeft("")((acc, time) => acc + time).toLong
   val record = records.foldLeft("")((acc, time) => acc + time).toLong
 
@@ -39,20 +34,19 @@ object Day06_2 extends App with Day06:
 
   println(distances.size)
 
-object Day06_2_2 extends App with Day06:
-  val time   = times.foldLeft("")((acc, time) => acc + time).toLong
-  val record = records.foldLeft("")((acc, time) => acc + time).toLong
+  val time2   = times.foldLeft("")((acc, time) => acc + time).toLong
+  val record2 = records.foldLeft("")((acc, time) => acc + time).toLong
 
   @tailrec
   def find(time: Long, speed: Long, nxtFn: Long => Long): Long = {
     val distance = speed * (time - speed)
-    if distance > record then speed
+    if distance > record2 then speed
     else find(time, nxtFn(speed), nxtFn)
   }
-  val minSpeed = record / time
-  val maxSpeed = time
+  val minSpeed2 = record2 / time2
+  val maxSpeed2 = time2
 
-  val first = find(time, minSpeed, _ + 1)
-  val last  = find(time, maxSpeed, _ - 1)
+  val first = find(time2, minSpeed2, _ + 1)
+  val last  = find(time2, maxSpeed2, _ - 1)
 
   println(last - first + 1)

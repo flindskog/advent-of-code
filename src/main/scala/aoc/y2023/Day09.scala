@@ -5,8 +5,8 @@ import aoc.utils.Input
 
 import scala.annotation.tailrec
 
-trait Day09:
-  val data = Input.read("2023/input_09.txt").map(_.split(" ").map(_.toLong).toList)
+object Day09 extends Aoc2023("input_09.txt"):
+  val data = input.map(_.split(" ").map(_.toLong).toList)
 
   def untilZeroes(data: List[Long]): List[List[Long]] =
     @tailrec
@@ -18,7 +18,6 @@ trait Day09:
 
     untilZeroes0(data, List(data))
 
-object Day09_1 extends App with Day09:
   val result = data
     .map: d =>
       untilZeroes(d).map(_.last).sum
@@ -26,8 +25,7 @@ object Day09_1 extends App with Day09:
 
   println(result)
 
-object Day09_2 extends App with Day09:
-  val result = data
+  val result2 = data
     .map: d =>
       untilZeroes(d)
         .map(_.head)
@@ -37,4 +35,4 @@ object Day09_2 extends App with Day09:
     .map(_.head)
     .sum
 
-  println(result)
+  println(result2)

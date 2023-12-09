@@ -10,17 +10,16 @@ enum Direction:
 
 case class Node(value: String, left: String, right: String)
 
-trait Day08:
-  val data = Input.read("2023/input_08.txt")
+object Day08 extends Aoc2023("input_08.txt"):
   val directionData =
-    data.head.map {
+    input.head.map {
       case 'L' => Direction.Left
       case 'R' => Direction.Right
       case d   => sys.error(s"Invalid direction [$d]")
     }.toList
 
   val directions = LazyList.continually(directionData).flatten
-  val treeData   = data.drop(2)
+  val treeData   = input.drop(2)
 
   val regex = """(...) = \((...), (...)\)""".r
   val graph = treeData.map { case regex(value, left, right) =>
@@ -34,7 +33,6 @@ trait Day08:
       case Direction.Right => node.right
   }
 
-object Day08_1 extends App with Day08:
   @tailrec
   def find(from: String, to: String, directions: LazyList[Direction], acc: List[String]): List[String] =
     if from == to then to :: acc
@@ -46,7 +44,6 @@ object Day08_1 extends App with Day08:
 
   println(result.size - 1) // 14429
 
-object Day08_2 extends App with Day08:
   val startNodes = graph.keySet.filter(_.endsWith("A"))
 
   def zPath(from: String, directions: LazyList[Direction], step: Int = 0): LazyList[(String, Int)] = {

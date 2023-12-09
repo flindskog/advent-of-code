@@ -24,8 +24,8 @@ extension (grid: Array[Array[Char]]) {
   }
 }
 
-trait Day03:
-  val grid = Input.read("2023/input_03.txt").map(_.toCharArray).to(Array)
+object Day03 extends Aoc2023("input_03.txt"):
+  val grid = input.map(_.toCharArray).to(Array)
 
   @tailrec
   final def parsePartNumbers(
@@ -54,13 +54,11 @@ trait Day03:
 
       parsePartNumbers(col + 1, row, None, acc)
 
-object Day03_1 extends App with Day03:
   val partNumbers  = parsePartNumbers()
   val validNumbers = partNumbers.filter(_.hasSymbolNeighbour(grid))
 
   println(validNumbers.map(_.number).sum)
 
-object Day03_2 extends App with Day03:
   val gearPositions =
     for
       row <- 0 until grid.rows
@@ -68,13 +66,13 @@ object Day03_2 extends App with Day03:
       if grid(row)(col) == '*'
     yield (row, col)
 
-  val partNumbers = parsePartNumbers()
+  val partNumbers2 = parsePartNumbers()
 
-  val result = gearPositions
+  val result2 = gearPositions
     .map: (row, col) =>
-      partNumbers.filter(_.isNeighbor(row, col))
+      partNumbers2.filter(_.isNeighbor(row, col))
     .filter(_.size == 2)
     .map(_.map(_.number).product)
     .sum
 
-  println(result)
+  println(result2)
