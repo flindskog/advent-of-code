@@ -7,5 +7,4 @@ object Input:
   def read(fileName: String): LazyList[String] = Source
     .fromFile(s"src/main/resources/$fileName")
     .getLines()
-    .map(_.trim)
     .to(LazyList)

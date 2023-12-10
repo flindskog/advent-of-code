@@ -2,7 +2,7 @@ package aoc
 
 import aoc.utils.Input
 
-trait Aoc(fileName: String) extends App:
+trait Aoc(fileName: String) extends Syntax with App:
   // Shows the execution time
   util.Properties.setProp("scala.time", "on")
 
