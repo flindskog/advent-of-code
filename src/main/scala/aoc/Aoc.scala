@@ -1,8 +1,9 @@
 package aoc
 
+import aoc.syntax.{AllSyntax, OptionSyntax}
 import aoc.utils.Input
 
-trait Aoc(fileName: String) extends Syntax with App:
+trait Aoc(fileName: String) extends AllSyntax with App:
   // Shows the execution time
   util.Properties.setProp("scala.time", "on")
 

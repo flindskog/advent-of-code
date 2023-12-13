@@ -1,5 +1,5 @@
-package aoc
+package aoc.syntax
 
-trait Syntax {
+trait OptionSyntax {
   extension [T](o: T) def some: Option[T] = Some(o)
 }
