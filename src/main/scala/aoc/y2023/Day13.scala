@@ -9,32 +9,31 @@ object Day13 extends Aoc2023("input_13.txt"):
   def findReflection(lines: Seq[String]): Int =
     val potential = lines.zipWithIndex
       .zip(lines.tail)
-      .filter { case ((currLine, _), nextLine) =>
-        currLine == nextLine
-      }
+      .filter { case ((currLine, _), nextLine) => currLine == nextLine }
       .map { case ((_, i), _) => i }
 
-    potential.foldLeft(0) { (acc, p) =>
+    potential.foldLeft(0): (acc, p) =>
       val (upper, lower) = lines.splitAt(p + 1)
       val upper2         = upper.reverse
       if upper2.startsWith(lower) || lower.startsWith(upper2) then p + 1 + acc
       else 0 + acc
-    }
 
   def findFuzzyReflection(lines: Seq[String]): Int =
     val potential = lines.zipWithIndex
       .zip(lines.tail)
-      .map { case ((currLine, i), nextLine) =>
-        (i, Text.levensteinDistance(currLine, nextLine))
-      }
+      .map { case ((currLine, i), nextLine) => (i, Text.levensteinDistance(currLine, nextLine)) }
       .filter { case (_, ld) => ld <= 1 }
 
-    potential.map { (p, ld) =>
-      val (upper, lower) = lines.splitAt(p + 1)
-      val upper2         = upper.reverse.tail
-      val lower2         = lower.tail
-      (p + 1, ld + upper2.zip(lower2).map((a, b) => Text.levensteinDistance(a, b)).sum)
-    }.filter { case (_, ld) => ld == 1 }.map { case (p, _) => p }.headOption.getOrElse(0)
+    potential
+      .map: (p, ld) =>
+        val (upper, lower) = lines.splitAt(p + 1)
+        val upper2         = upper.reverse.tail
+        val lower2         = lower.tail
+        (p + 1, ld + upper2.zip(lower2).map((a, b) => Text.levensteinDistance(a, b)).sum)
+      .filter((_, ld) => ld == 1)
+      .map((p, _) => p)
+      .headOption
+      .getOrElse(0)
 
   val result1 = input.splitByEmptyLine.map: lines =>
     val rotated = lines.map(_.toSeq).rotateRight.map(_.mkString)
