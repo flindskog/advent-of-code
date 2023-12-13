@@ -21,7 +21,7 @@ object Day13 extends Aoc2023("input_13.txt"):
   def findFuzzyReflection(lines: Seq[String]): Int =
     val potential = lines.zipWithIndex
       .zip(lines.tail)
-      .map { case ((currLine, i), nextLine) => (i, Text.levensteinDistance(currLine, nextLine)) }
+      .map { case ((currLine, i), nextLine) => (i, currLine.levenshteinDistance(nextLine)) }
       .filter { case (_, ld) => ld <= 1 }
 
     potential
@@ -29,7 +29,7 @@ object Day13 extends Aoc2023("input_13.txt"):
         val (upper, lower) = lines.splitAt(p + 1)
         val upper2         = upper.reverse.tail
         val lower2         = lower.tail
-        (p + 1, ld + upper2.zip(lower2).map((a, b) => Text.levensteinDistance(a, b)).sum)
+        (p + 1, ld + upper2.zip(lower2).map((a, b) => a.levenshteinDistance(b)).sum)
       .filter((_, ld) => ld == 1)
       .map((p, _) => p)
       .headOption

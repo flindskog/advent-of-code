@@ -5,7 +5,7 @@ object Text {
   /**
    * Compute the Levenstein distance between two strings.
    */
-  def levensteinDistance(line1: String, line2: String): Int = {
+  def levenshteinDistance(line1: String, line2: String): Int = {
     val m = line1.length
     val n = line2.length
     val d = Array.ofDim[Int](m + 1, n + 1)
