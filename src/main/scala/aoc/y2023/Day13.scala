@@ -1,10 +1,5 @@
 package aoc.y2023
 
-import aoc.utils.{Matrix, Text}
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type
-
-import scala.annotation.tailrec
-
 object Day13 extends Aoc2023("input_13.txt"):
   def findReflection(lines: Seq[String]): Int =
     val potential = lines.zipWithIndex

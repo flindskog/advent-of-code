@@ -1,6 +1,6 @@
 package aoc.utils
 
-object Matrix {
+object SeqUtils {
   def rotateRight[T](m: Seq[Seq[T]]): Seq[Seq[T]] =
     m.transpose.map(_.reverse)
 
