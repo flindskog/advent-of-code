@@ -1,7 +1,5 @@
 package aoc.y2023
 
-import aoc.utils.ArrayUtils
-
 import scala.annotation.tailrec
 import scala.collection.immutable.VectorMap
 

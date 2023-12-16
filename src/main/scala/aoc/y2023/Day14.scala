@@ -1,6 +1,6 @@
 package aoc.y2023
 
-import aoc.utils.ArrayUtils
+import aoc.utils.GridUtils
 
 import scala.annotation.tailrec
 
@@ -55,21 +55,21 @@ object Day14 extends Aoc2023("input_14.txt"):
 
   def cycle(grid: Grid): Grid = {
     // North
-    tilt(ArrayUtils.inPlaceRotate90Degrees(grid))
+    tilt(GridUtils.inPlaceRotate90Degrees(grid))
 
     // West
-    ArrayUtils.inPlaceRotateRight(grid)
+    GridUtils.inPlaceRotateRight(grid)
     tilt(grid)
 
     // South
-    ArrayUtils.inPlaceRotateRight(grid)
+    GridUtils.inPlaceRotateRight(grid)
     tilt(grid)
 
     // East
-    ArrayUtils.inPlaceRotateRight(grid)
+    GridUtils.inPlaceRotateRight(grid)
     tilt(grid)
 
-    ArrayUtils.inPlaceRotateLeft(grid)
+    GridUtils.inPlaceRotateLeft(grid)
   }
 
   def detectCycles(l: List[String]): Option[Int] =
@@ -103,7 +103,7 @@ object Day14 extends Aoc2023("input_14.txt"):
   }
 
   val res = input.splitByEmptyLine.map(_.map(_.toCharArray).toArray).map { grid =>
-    ArrayUtils.inPlaceRotate90Degrees(tilt(ArrayUtils.inPlaceRotate90Degrees(grid)))
+    GridUtils.inPlaceRotate90Degrees(tilt(GridUtils.inPlaceRotate90Degrees(grid)))
   }
 
   res.map(calculateNorthLoad).foreach(println) // 108918

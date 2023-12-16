@@ -10,7 +10,7 @@ class ArrayUtilsSpec extends AnyFlatSpec with Matchers {
       Array(4, 5, 6),
       Array(7, 8, 9)
     )
-    ArrayUtils.inPlaceRotateRight(array)
+    GridUtils.inPlaceRotateRight(array)
     array should be(
       Array(
         Array(7, 4, 1),
@@ -26,7 +26,7 @@ class ArrayUtilsSpec extends AnyFlatSpec with Matchers {
       Array(4, 5, 6),
       Array(7, 8, 9)
     )
-    ArrayUtils.inPlaceRotateLeft(array)
+    GridUtils.inPlaceRotateLeft(array)
     array should be(
       Array(
         Array(3, 6, 9),
@@ -42,7 +42,7 @@ class ArrayUtilsSpec extends AnyFlatSpec with Matchers {
       Array(4, 5, 6),
       Array(7, 8, 9)
     )
-    ArrayUtils.inPlaceRotate90Degrees(array)
+    GridUtils.inPlaceRotate90Degrees(array)
     array should be(
       Array(
         Array(9, 8, 7),
