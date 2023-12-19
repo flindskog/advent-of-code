@@ -5,7 +5,7 @@ lazy val root = project
     version      := "0.1.0-SNAPSHOT",
     scalaVersion := "3.3.1",
     scalacOptions := Seq(
-      "-Wunused"
+      "-Wunused:all"
     ),
     libraryDependencies ++= Seq(
       "org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.4",

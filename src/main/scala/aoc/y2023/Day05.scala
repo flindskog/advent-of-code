@@ -4,7 +4,7 @@ import aoc.utils.Input
 
 import scala.annotation.tailrec
 
-case class Range(dstStart: Long, srcStart: Long, length: Long):
+case class AocRange(dstStart: Long, srcStart: Long, length: Long):
   def destination(source: Long): Option[Long] =
     if source >= srcStart && source < srcStart + length
     then Some(dstStart + (source - srcStart))
@@ -15,7 +15,7 @@ case class Range(dstStart: Long, srcStart: Long, length: Long):
     then Some(srcStart + (destination - dstStart))
     else None
 
-case class Mapping(srcCat: String, dstCat: String, ranges: Seq[Range]):
+case class Mapping(srcCat: String, dstCat: String, ranges: Seq[AocRange]):
   def destination(source: Long): Long =
     ranges.find(_.destination(source).isDefined).map(_.destination(source).get).getOrElse(source)
 
@@ -40,7 +40,7 @@ object Day05 extends Aoc2023("input_05.txt"):
         val regex = """(\d+) (\d+) (\d+)""".r
         val (dstStart, srcStart, length) = line match
           case regex(dstStart, srcStart, length) => (dstStart, srcStart, length)
-        Range(dstStart.toLong, srcStart.toLong, length.toLong)
+        AocRange(dstStart.toLong, srcStart.toLong, length.toLong)
 
       (srcCat, Mapping(srcCat, dstCat, ranges))
     .toMap

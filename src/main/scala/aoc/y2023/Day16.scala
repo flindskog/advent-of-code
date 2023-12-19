@@ -60,11 +60,7 @@ object Day16 extends Aoc2023("input_16.txt"):
       }
       key -> vertexDirections.map(d => Beam(position.move(d), d)).filter(k => isInsideGrid(k.position))
     }.toMap
-    graphData.foldLeft(graph) { case (graph, (key, edges)) =>
-      graph
-        .addVertex(key)
-        .addEdges(key, edges)
-    }
+    graphData.foldLeft(graph) { case (graph, (key, edges)) => graph.addEdges(key, edges) }
   }
 
   val start = Beam(Position(0, 0), Direction.Right)
