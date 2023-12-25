@@ -1,6 +1,6 @@
 package aoc.data
 
-import scala.annotation.tailrec
+import scala.annotation.{tailrec, targetName}
 
 case class Pos(row: Int, col: Int) {
   def move(direction: Direction): Pos = direction match {
@@ -21,7 +21,7 @@ case class Pos(row: Int, col: Int) {
 
   def isOutsideGrid[T](grid: Array[Array[T]]): Boolean = !isInsideGrid(grid)
 
-  def perpendicularNeighbors: Set[Pos] = Set(
+  def adjacentNeighbors: Set[Pos] = Set(
     Pos(row - 1, col),
     Pos(row + 1, col),
     Pos(row, col - 1),
@@ -35,30 +35,53 @@ case class Pos(row: Int, col: Int) {
     Pos(row + 1, col + 1)
   )
 
-  def neighbors = perpendicularNeighbors ++ diagonalNeighbors
+  def neighbors = adjacentNeighbors ++ diagonalNeighbors
+
+  @targetName("plusPos")
+  def +(other: Pos): Pos = Pos(row + other.row, col + other.col)
+
+  @targetName("minusPos")
+  def -(other: Pos): Pos = Pos(row - other.row, col - other.col)
+
+  def addRow(row: Int): Pos = Pos(this.row + row, this.col)
+
+  def addCol(col: Int): Pos = Pos(this.row, this.col + col)
 }
 
 object Pos {
   given Ordering[Pos] = Ordering.by(p => (p.row, p.col))
 
+  def apply(p: (Int, Int)): Pos = Pos(p._1, p._2)
+
   val origo: Pos = Pos(0, 0)
 
-  def drawAsGrid(positions: Set[Pos]): String = {
-    val rows   = positions.map(_.row)
-    val cols   = positions.map(_.col)
+  def drawAsGrid(positions: Set[Pos]): String = drawAsGrid(Map('#' -> positions))
+
+  def drawAsGrid(positions: Set[Pos], minRow: Int, maxRow: Int, minCol: Int, maxCol: Int): String =
+    drawAsGrid(Map('#' -> positions), minRow: Int, maxRow: Int, minCol: Int, maxCol: Int)
+
+  def drawAsGrid(objects: Map[Char, Set[Pos]]): String = {
+    val rows   = objects.values.flatMap(_.map(_.row))
+    val cols   = objects.values.flatMap(_.map(_.col))
     val minRow = rows.min
     val maxRow = rows.max
     val minCol = cols.min
     val maxCol = cols.max
+    drawAsGrid(objects, minRow, maxRow, minCol, maxCol)
+  }
 
+  def drawAsGrid(objects: Map[Char, Set[Pos]], minRow: Int, maxRow: Int, minCol: Int, maxCol: Int): String =
     (minRow to maxRow)
       .map(row =>
         (minCol to maxCol)
-          .map(col => if (positions.contains(Pos(row, col))) "#" else ".")
+          .map(col =>
+            objects.find { case (_, positions) => positions.contains(Pos(row, col)) }
+              .map(_._1)
+              .getOrElse('.')
+          )
           .mkString
       )
       .mkString("\n")
-  }
 
   def floodFill(border: Set[Pos], start: Pos, max: Int): Option[Set[Pos]] = {
     @tailrec
