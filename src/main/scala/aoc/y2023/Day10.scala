@@ -4,8 +4,11 @@ import scala.annotation.tailrec
 import scala.util.Try
 
 private case class Position(row: Int, col: Int):
-  def neighbors: Set[Position] =
+  def adjacent: Set[Position] =
     Set(Position(row + 1, col), Position(row - 1, col), Position(row, col + 1), Position(row, col - 1))
+  def diagonal: Set[Position] =
+    Set(Position(row + 1, col + 1), Position(row - 1, col - 1), Position(row + 1, col - 1), Position(row - 1, col + 1))
+  def neighbors: Set[Position] = adjacent ++ diagonal
 
 private case class Vertex(char: Char, position: Position, edges: Set[Position])
 

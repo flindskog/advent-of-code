@@ -1,7 +1,5 @@
 package aoc.y2023
 
-import aoc.utils.Input
-
 import scala.annotation.tailrec
 
 case class AocRange(dstStart: Long, srcStart: Long, length: Long):
@@ -73,6 +71,7 @@ object Day05 extends Aoc2023("input_05.txt"):
       case Seq(a, b) => (a, b)
       case v         => sys.error(s"Unexpected grouping $v")
     .toSeq
+
   val infiniteSeq: LazyList[Long] = {
     def loop(v: Long): LazyList[Long] = v #:: loop(v + 1)
     loop(0)

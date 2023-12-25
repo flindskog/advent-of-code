@@ -1,6 +1,6 @@
 package aoc.y2023
 
-import aoc.data.Graph
+import aoc.data.UndirectedGraph
 
 object Day16 extends Aoc2023("input_16.txt"):
   enum Direction:
@@ -22,7 +22,7 @@ object Day16 extends Aoc2023("input_16.txt"):
 
   val grid        = input.map(_.toCharArray).toArray
   val gridIndices = grid.indices.flatMap(row => grid(row).indices.map(col => (row, col)))
-  val graph = gridIndices.foldLeft(Graph.empty[Beam]) { case (graph, (row, col)) =>
+  val graph = gridIndices.foldLeft(UndirectedGraph.empty[Beam]) { case (graph, (row, col)) =>
     val position   = Position(row, col)
     val directions = List(Direction.Up, Direction.Down, Direction.Left, Direction.Right)
     val keys       = directions.map(Beam(position, _))
