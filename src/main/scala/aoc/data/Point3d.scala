@@ -37,11 +37,13 @@ case class Point3d[T](x: T, y: T, z: T)(using numeric: Numeric[T]) {
 
   def mapType[T2](f: T => T2)(using Numeric[T2]): Point3d[T2] = Point3d(f(x), f(y), f(z))
 
-  def withX(x: T): Point3d[T] = Point3d(x, y, z)
+  def withX(newX: T): Point3d[T] = Point3d(newX, y, z)
 
-  def withY(y: T): Point3d[T] = Point3d(x, y, z)
+  def withY(newY: T): Point3d[T] = Point3d(x, newY, z)
 
-  def withZ(z: T): Point3d[T] = Point3d(x, y, z)
+  def withZ(newZ: T): Point3d[T] = Point3d(x, y, newZ)
+
+  def xyProjection: Point2d[T] = Point2d(x, y)
 }
 
 object Point3d {

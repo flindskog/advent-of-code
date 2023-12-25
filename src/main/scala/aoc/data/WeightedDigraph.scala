@@ -1,21 +1,17 @@
 package aoc.data
 
 import scala.annotation.tailrec
-import scala.collection.immutable.ListMap
-import scala.collection.mutable
 
 case class WeightedEdge[T, W](from: T, to: T, weight: W)
 
-case class WeightedDigraph[T, W](vertices: Set[T] = Set(), edges: Set[WeightedEdge[T, W]] = Set())(using
+case class WeightedDigraph[T, W](edges: Set[WeightedEdge[T, W]] = Set())(using
     numeric: Numeric[W]
 ) {
   val edgesByKey = edges.groupBy(_.from)
+  val vertices   = edgesByKey.keySet
 
-  def addVertex(vertex: T): WeightedDigraph[T, W] =
-    WeightedDigraph(vertices + vertex, edges)
-    
   def addEdge(edge: WeightedEdge[T, W]): WeightedDigraph[T, W] =
-    WeightedDigraph(vertices + edge.from + edge.to, edges + edge)
+    WeightedDigraph(edges + edge)
 
   /**
    * Returns the shortest path from `from` to `to` in the graph.
@@ -113,5 +109,5 @@ case class WeightedDigraph[T, W](vertices: Set[T] = Set(), edges: Set[WeightedEd
 }
 
 object WeightedDigraph {
-  def apply[T, W]()(using numeric: Numeric[W]): WeightedDigraph[T, W] = WeightedDigraph(Set(), Set())
+  def apply[T, W]()(using numeric: Numeric[W]): WeightedDigraph[T, W] = WeightedDigraph(Set())
 }
