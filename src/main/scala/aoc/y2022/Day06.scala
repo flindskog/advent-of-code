@@ -1,7 +1,6 @@
 package aoc.y2022
 
 import scala.annotation.tailrec
-import scala.util.Try
 
 object Day06 extends Aoc2022("input_06.txt"):
   val data = input.head

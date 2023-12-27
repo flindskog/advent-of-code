@@ -1,7 +1,5 @@
 package aoc.y2023
 
-import aoc.utils.Input
-
 import scala.annotation.tailrec
 
 object Day06 extends Aoc2023("input_06.txt"):

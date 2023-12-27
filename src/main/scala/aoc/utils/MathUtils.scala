@@ -2,7 +2,7 @@ package aoc.utils
 
 import scala.annotation.tailrec
 
-object Math:
+object MathUtils:
 
   /**
    * Calculates the greatest common divisor of two numbers.
@@ -12,8 +12,13 @@ object Math:
    * @return greatest common divisor
    */
   @tailrec
-  def gcd(a: Long, b: Long): Long =
+  def gcd[T](a: T, b: T)(using integral: Integral[T]): T = {
+    import integral.*
     if b == 0 then a else gcd(b, a % b)
+  }
+
+  def gcd[T: Integral](numbers: T*): T =
+    numbers.reduce(gcd)
 
   /**
    * Calculates the least common multiple of two numbers.
@@ -21,14 +26,19 @@ object Math:
    * @param b second number
    * @return least common multiple
    */
-  def lcm(a: Long, b: Long): Long =
-    if a == 0 || b == 0 then 0
-    else scala.math.abs(a * b) / gcd(a, b)
+  def lcm[T](a: T, b: T)(using integral: Integral[T]): T = {
+    import integral.*
+    if a == zero || b == zero then zero
+    else {
+      val product = a * b
+      if product < zero then -product / gcd(a, b) else product / gcd(a, b)
+    }
+  }
 
   /**
    * Calculates the least common multiple of a list of numbers.
    * @param numbers list of numbers
    * @return least common multiple
    */
-  def lcm(numbers: List[Long]): Long =
+  def lcm[T: Integral](numbers: T*): T =
     numbers.reduce(lcm)

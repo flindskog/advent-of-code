@@ -1,6 +1,6 @@
 package aoc
 
-import aoc.syntax.{AllSyntax, OptionSyntax}
+import aoc.syntax.AllSyntax
 import aoc.utils.Input
 
 import scala.reflect.ClassTag
@@ -10,6 +10,8 @@ trait Aoc(fileName: String) extends AllSyntax with App:
   util.Properties.setProp("scala.time", "on")
 
   val input = Input.read(fileName)
+
+  type Grid[T] = Array[Array[T]]
 
   extension (input: LazyList[String]) {
     def splitByEmptyLine: LazyList[List[String]] =
@@ -22,6 +24,6 @@ trait Aoc(fileName: String) extends AllSyntax with App:
         .reverse
         .filter(_.nonEmpty)
 
-    def toGrid[T: ClassTag](mapFn: Char => T = identity): Array[Array[T]] =
+    def toGrid[T: ClassTag](mapFn: Char => T = identity): Grid[T] =
       input.map(_.toCharArray.map(mapFn)).toArray
   }

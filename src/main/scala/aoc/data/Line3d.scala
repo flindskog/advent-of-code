@@ -9,10 +9,42 @@ case class IntersectionData(
 case class Line3d[T](start: Point3d[T], direction: Point3d[T])(using numeric: Numeric[T]) {
   import numeric.*
 
-  def intersection(other: Line3d[T]): Option[IntersectionData] = {
-    def toBigDecimal(v: T)          = BigDecimal(v.toString)
+  private def toBigDecimal(v: T)                 = BigDecimal(v.toString)
+  private val epsilon: Double                    = 1e-6
+  private def same(x: BigDecimal, y: BigDecimal) = (x - y).abs < epsilon
+
+  def contains(point: Point3d[T]): Boolean =
     given Conversion[T, BigDecimal] = toBigDecimal
-    val epsilon: Double             = 1e-6
+    if (direction.x != zero) {
+      val t = (point.x - start.x) / direction.x
+      if (t < zero) false
+      else {
+        val y = start.y + direction.y * t
+        val z = start.z + direction.z * t
+        same(point.y, y) && same(point.z, z)
+      }
+    } else if (direction.y != zero) {
+      val t = (point.y - start.y) / direction.y
+      if (t < zero) false
+      else {
+        val x = start.x + direction.x * t
+        val z = start.z + direction.z * t
+        same(point.x, x) && same(point.z, z)
+      }
+    } else if (direction.z != zero) {
+      val t = (point.z - start.z) / direction.z
+      if (t < zero) false
+      else {
+        val x = start.x + direction.x * t
+        val y = start.y + direction.y * t
+        same(point.x, x) && same(point.y, y)
+      }
+    } else {
+      false
+    }
+
+  def intersection(other: Line3d[T]): Option[IntersectionData] = {
+    given Conversion[T, BigDecimal] = toBigDecimal
 
     val crossProduct = this.direction.cross(other.direction)
 
@@ -55,8 +87,10 @@ case class Line3d[T](start: Point3d[T], direction: Point3d[T])(using numeric: Nu
     }
   }
 
-  def plane(other: Line3d[T]): Option[Plane3d[T]] = {
-    val normal = this.direction.cross(other.direction)
-    if (normal == Point3d.zero) None else Some(Plane3d(this.start, normal))
-  }
+  def mapType[T2](f: T => T2)(using Numeric[T2]): Line3d[T2] = Line3d(start.mapType(f), direction.mapType(f))
+}
+
+object Line3d {
+  def fromTwoPoints[T](p1: Point3d[T], p2: Point3d[T])(using numeric: Numeric[T]): Line3d[T] =
+    Line3d(p1, p2 - p1)
 }

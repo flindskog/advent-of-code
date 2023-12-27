@@ -1,8 +1,5 @@
 package aoc.y2023
 
-import aoc.Aoc
-import aoc.utils.Input
-
 object Day01 extends Aoc2023("input_01.txt"):
   val result1 =
     (input.map(_.find(_.isDigit)) zip input.map(_.findLast(_.isDigit))).flatMap { case (f, l) =>

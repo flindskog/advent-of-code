@@ -1,7 +1,5 @@
 package aoc.y2023
 
-import aoc.utils.Input
-
 enum Color:
   case red, green, blue
 

@@ -1,9 +1,5 @@
 package aoc.y2023
 
-import aoc.utils.Input
-
-import scala.annotation.tailrec
-
 sealed trait Hand extends Ordered[Hand]:
   val cards: String
 

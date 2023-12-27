@@ -8,10 +8,13 @@ case class WeightedDigraph[T, W](edges: Set[WeightedEdge[T, W]] = Set())(using
     numeric: Numeric[W]
 ) {
   val edgesByKey = edges.groupBy(_.from)
-  val vertices   = edgesByKey.keySet
+  val vertices   = edges.flatMap(e => Set(e.from, e.to))
 
   def addEdge(edge: WeightedEdge[T, W]): WeightedDigraph[T, W] =
     WeightedDigraph(edges + edge)
+
+  def addEdge(from: T, to: T, weight: W): WeightedDigraph[T, W] =
+    addEdge(WeightedEdge(from, to, weight))
 
   /**
    * Returns the shortest path from `from` to `to` in the graph.
@@ -80,34 +83,8 @@ case class WeightedDigraph[T, W](edges: Set[WeightedEdge[T, W]] = Set())(using
 
     dfs(from, Set(from))
   }
-
-  def longestSimplePathOptimized(from: T, to: T): Option[W] = {
-    var memo: Map[(T, Set[T]), Option[W]] = Map()
-
-    def dfs(current: T, visited: Set[T]): Option[W] =
-      if (current == to) Some(numeric.zero)
-      else {
-        val subproblem = (current, visited)
-        if (memo.contains(subproblem)) {
-          memo(subproblem)
-        } else {
-          val outgoingEdges = edgesByKey.getOrElse(current, Set())
-          val possiblePaths = for {
-            edge <- outgoingEdges
-            if !visited(edge.to)
-            nextPath <- dfs(edge.to, visited + edge.to)
-          } yield numeric.plus(edge.weight, nextPath)
-
-          val result = possiblePaths.maxOption
-          memo += (subproblem -> result)
-          result
-        }
-      }
-
-    dfs(from, Set(from))
-  }
 }
 
 object WeightedDigraph {
-  def apply[T, W]()(using numeric: Numeric[W]): WeightedDigraph[T, W] = WeightedDigraph(Set())
+  def empty[T, W](using numeric: Numeric[W]): WeightedDigraph[T, W] = WeightedDigraph(Set())
 }

@@ -8,9 +8,7 @@ object Day14 extends Aoc2023("input_14.txt"):
   private val round  = 'O'
   private val square = '#'
 
-  type Grid = Array[Array[Char]]
-
-  def tilt(matrix: Grid): Grid = {
+  def tilt(matrix: Grid[Char]): Grid[Char] = {
     val height = matrix.length
 
     def tiltColumn(col: Int): Unit = {
@@ -46,14 +44,14 @@ object Day14 extends Aoc2023("input_14.txt"):
     matrix
   }
 
-  def calculateNorthLoad(matrix: Grid): Int =
+  def calculateNorthLoad(matrix: Grid[Char]): Int =
     matrix.head.indices.map { col =>
       matrix.indices.map { row =>
         if matrix(row)(col) == round then matrix.length - row else 0
       }.sum
     }.sum
 
-  def cycle(grid: Grid): Grid = {
+  def cycle(grid: Grid[Char]): Grid[Char] = {
     // North
     tilt(GridUtils.inPlaceRotate90Degrees(grid))
 
@@ -91,7 +89,7 @@ object Day14 extends Aoc2023("input_14.txt"):
     }
 
   @tailrec
-  def predictLoad(grid: Grid, afterCycles: Int, cycleNo: Int = 1, stack: List[(Int, String, Int)] = Nil): Int = {
+  def predictLoad(grid: Grid[Char], afterCycles: Int, cycleNo: Int = 1, stack: List[(Int, String, Int)] = Nil): Int = {
     cycle(grid)
     val load      = calculateNorthLoad(grid)
     val gridState = grid.map(_.mkString).mkString

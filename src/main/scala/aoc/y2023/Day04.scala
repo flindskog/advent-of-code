@@ -1,7 +1,5 @@
 package aoc.y2023
 
-import aoc.utils.Input
-
 object Day04 extends Aoc2023("input_04.txt"):
   val regex = """Card +\d+: +([\d ]+) \| +([\d ]+)""".r
 

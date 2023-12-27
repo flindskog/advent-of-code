@@ -11,7 +11,7 @@ case class Pos(row: Int, col: Int) {
   }
 
   def move(direction: Direction, steps: Int): Pos =
-    (0 until steps).foldLeft(this)((pos, _) => pos.move(direction))
+    (1 to steps).foldLeft(this)((pos, _) => pos.move(direction))
 
   def manhattanDistance(other: Pos): Int =
     Math.abs(row - other.row) + Math.abs(col - other.col)

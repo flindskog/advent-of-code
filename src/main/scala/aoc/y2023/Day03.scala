@@ -1,7 +1,5 @@
 package aoc.y2023
 
-import aoc.utils.Input
-
 import scala.annotation.tailrec
 
 case class PartNumber(number: Int, row: Int, start: Int, end: Int):

@@ -1,6 +1,6 @@
 package aoc.y2023
 
-import aoc.utils.Math
+import aoc.utils.MathUtils
 
 import scala.annotation.{tailrec, targetName}
 
@@ -132,9 +132,7 @@ object Day20 extends Aoc2023("input_20.txt"):
     "lt" -> BeamCount()
   )
 
-  val cycles = processLoop(probes)
-    .zipWithIndex
-    .filter { case ((probes, _), _) => probes.values.exists(_.lows > 0) }
+  val cycles = processLoop(probes).zipWithIndex.filter { case ((probes, _), _) => probes.values.exists(_.lows > 0) }
     .take(probes.size * 2)
     .map { case ((probes, _), index) =>
       val (name, _) = probes.find(_._2.lows > 0).get
@@ -144,5 +142,5 @@ object Day20 extends Aoc2023("input_20.txt"):
     .groupBy(_._1)
     .map((_, list) => list.map(_._2.toLong).sorted.reverse)
 
-  val lcm = Math.lcm(cycles.map(_.reduce(_ - _)).toList)
+  val lcm = MathUtils.lcm(cycles.map(_.reduce(_ - _)).toSeq: _*)
   println(lcm) // 227411378431763

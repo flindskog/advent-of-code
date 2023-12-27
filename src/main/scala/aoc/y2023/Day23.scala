@@ -61,7 +61,7 @@ object Day23 extends Aoc2023("input_23.txt"):
     }
   }
 
-  val graph = edges.toSeq.foldLeft[WeightedDigraph[Pos, Int]](WeightedDigraph()) { (acc, edge) =>
+  val graph = edges.toSeq.foldLeft[WeightedDigraph[Pos, Int]](WeightedDigraph.empty) { (acc, edge) =>
     acc.addEdge(edge.copy(weight = -edge.weight))
   }
 
@@ -86,7 +86,7 @@ object Day23 extends Aoc2023("input_23.txt"):
     }
   }
 
-  val graph2 = edges2.toSeq.foldLeft[WeightedDigraph[Pos, Int]](WeightedDigraph()) { (acc, edge) =>
+  val graph2 = edges2.toSeq.foldLeft[WeightedDigraph[Pos, Int]](WeightedDigraph.empty) { (acc, edge) =>
     acc.addEdge(edge.copy(weight = edge.weight))
   }
 

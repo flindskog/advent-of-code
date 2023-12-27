@@ -1,6 +1,5 @@
 package aoc.y2023
 
-import scala.annotation.tailrec
 import scala.collection.parallel.CollectionConverters._
 
 object Day12 extends Aoc2023("input_12.txt"):

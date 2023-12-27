@@ -1,7 +1,6 @@
 package aoc.y2023
 
 import aoc.utils
-import aoc.utils.Input
 
 import scala.annotation.tailrec
 
@@ -54,8 +53,8 @@ object Day08 extends Aoc2023("input_08.txt"):
   val zDistances = startNodes
     .flatMap(node => zPath(node, directions).filter { case (node, _) => node.endsWith("Z") }.take(1))
     .map((_, step) => step.toLong)
-    .toList
+    .toSeq
 
   // By ocular inspection it could be figured out that the path is a loop!
   // Solving problems by coincidence!!!
-  println(utils.Math.lcm(zDistances)) // 10921547990923
+  println(utils.MathUtils.lcm(zDistances: _*)) // 10921547990923
