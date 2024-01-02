@@ -13,6 +13,9 @@ case class Line3d[T](start: Point3d[T], direction: Point3d[T])(using numeric: Nu
   private val epsilon: Double                    = 1e-6
   private def same(x: BigDecimal, y: BigDecimal) = (x - y).abs < epsilon
 
+  def isParallelTo(other: Line3d[T]): Boolean =
+    this.direction.cross(other.direction).isZero(epsilon)
+  
   def contains(point: Point3d[T]): Boolean =
     given Conversion[T, BigDecimal] = toBigDecimal
     if (direction.x != zero) {
@@ -58,7 +61,6 @@ case class Line3d[T](start: Point3d[T], direction: Point3d[T])(using numeric: Nu
         val t2 = t1 + other.direction.dot(this.direction) / this.direction.dot(this.direction)
 
         if ((t1 >= 0d && t1 <= 1d) || (t2 >= 0d && t2 <= 1d) || (t1 <= 0d && t2 >= 1d) || (t2 <= 0d && t1 >= 1d)) {
-          // Overlapping segments, return the intersection point
           // Overlapping segments, calculate the intersection point
           val intersectionPoint = this.start.mapType(toBigDecimal) + this.direction.mapType(toBigDecimal) * t1
           val distanceFromThis  = t1
@@ -74,16 +76,24 @@ case class Line3d[T](start: Point3d[T], direction: Point3d[T])(using numeric: Nu
         None
       }
     } else {
-      // Lines are not parallel, calculate the intersection point
-      val startDiff = other.start - this.start
-      val t = startDiff.cross(other.direction).dot(crossProduct) /
-        this.direction.cross(other.direction).dot(crossProduct)
-      val intersectionPoint = this.start.mapType(toBigDecimal) + this.direction.mapType(toBigDecimal) * t
+      // Lines are not parallel, check if they intersect
+      // Two non-parallel lines 𝑝1+ℝ𝑣1 and 𝑝2+ℝ𝑣2 intersect if and only if (𝑣1×𝑣2)⋅(𝑝1−𝑝2)=0.
+      val result = (this.start - other.start).dot(crossProduct)
+      if (result == zero) {
+        // Lines intersect, calculate the intersection point
+        val startDiff = other.start - this.start
+        val t = startDiff.cross(other.direction).dot(crossProduct) /
+          this.direction.cross(other.direction).dot(crossProduct)
+        val intersectionPoint = this.start.mapType(toBigDecimal) + this.direction.mapType(toBigDecimal) * t
 
-      val distanceFromThis = t
-      val distanceFromOther =
-        (intersectionPoint - other.start.mapType(toBigDecimal)).dot(other.direction.mapType(toBigDecimal))
-      Some(IntersectionData(intersectionPoint, distanceFromThis, distanceFromOther))
+        val distanceFromThis = t
+        val distanceFromOther =
+          (intersectionPoint - other.start.mapType(toBigDecimal)).dot(other.direction.mapType(toBigDecimal))
+        Some(IntersectionData(intersectionPoint, distanceFromThis, distanceFromOther))
+      } else {
+        // Lines do not intersect
+        None
+      }
     }
   }
 

@@ -1,19 +1,14 @@
 package aoc.y2023
 
+import aoc.data.Pos
+
 import scala.annotation.tailrec
 import scala.util.Try
 
-private case class Position(row: Int, col: Int):
-  def adjacent: Set[Position] =
-    Set(Position(row + 1, col), Position(row - 1, col), Position(row, col + 1), Position(row, col - 1))
-  def diagonal: Set[Position] =
-    Set(Position(row + 1, col + 1), Position(row - 1, col - 1), Position(row + 1, col - 1), Position(row - 1, col + 1))
-  def neighbors: Set[Position] = adjacent ++ diagonal
-
-private case class Vertex(char: Char, position: Position, edges: Set[Position])
+private case class Vertex(char: Char, pos: Pos, edges: Set[Pos])
 
 object Day10 extends Aoc2023("input_10.txt"):
-  def breadthFirstTraversal(start: Vertex, graph: Map[Position, Vertex]): List[(Vertex, Int)] =
+  def breadthFirstTraversal(start: Vertex, graph: Map[Pos, Vertex]): List[(Vertex, Int)] =
     @tailrec
     def loop(queue: List[(Vertex, Int)], visited: Map[Vertex, Int]): Map[Vertex, Int] =
       queue match
@@ -30,26 +25,26 @@ object Day10 extends Aoc2023("input_10.txt"):
     .map(_.toArray)
     .toArray
 
-  val graph: Map[Position, Vertex] = grid.zipWithIndex
+  val graph: Map[Pos, Vertex] = grid.zipWithIndex
     .flatMap: (rowArray, row) =>
       rowArray.zipWithIndex.flatMap: (char, col) =>
-        val position = Position(row, col)
+        val position = Pos(row, col)
         char match
-          case '|' => Vertex(char, position, Set(Position(row + 1, col), Position(row - 1, col))).some
-          case '-' => Vertex(char, position, Set(Position(row, col + 1), Position(row, col - 1))).some
-          case 'L' => Vertex(char, position, Set(Position(row - 1, col), Position(row, col + 1))).some
-          case 'J' => Vertex(char, position, Set(Position(row - 1, col), Position(row, col - 1))).some
-          case '7' => Vertex(char, position, Set(Position(row + 1, col), Position(row, col - 1))).some
-          case 'F' => Vertex(char, position, Set(Position(row + 1, col), Position(row, col + 1))).some
+          case '|' => Vertex(char, position, Set(Pos(row + 1, col), Pos(row - 1, col))).some
+          case '-' => Vertex(char, position, Set(Pos(row, col + 1), Pos(row, col - 1))).some
+          case 'L' => Vertex(char, position, Set(Pos(row - 1, col), Pos(row, col + 1))).some
+          case 'J' => Vertex(char, position, Set(Pos(row - 1, col), Pos(row, col - 1))).some
+          case '7' => Vertex(char, position, Set(Pos(row + 1, col), Pos(row, col - 1))).some
+          case 'F' => Vertex(char, position, Set(Pos(row + 1, col), Pos(row, col + 1))).some
           case 'S' =>
             val west =
-              Try(grid(row)(col - 1)).toOption.filter(Set('-', 'L', 'F').contains).map(_ => Position(row, col - 1))
+              Try(grid(row)(col - 1)).toOption.filter(Set('-', 'L', 'F').contains).map(_ => Pos(row, col - 1))
             val east =
-              Try(grid(row)(col + 1)).toOption.filter(Set('-', 'J', '7').contains).map(_ => Position(row, col + 1))
+              Try(grid(row)(col + 1)).toOption.filter(Set('-', 'J', '7').contains).map(_ => Pos(row, col + 1))
             val north =
-              Try(grid(row - 1)(col)).toOption.filter(Set('|', 'F', '7').contains).map(_ => Position(row - 1, col))
+              Try(grid(row - 1)(col)).toOption.filter(Set('|', 'F', '7').contains).map(_ => Pos(row - 1, col))
             val south =
-              Try(grid(row + 1)(col)).toOption.filter(Set('|', 'L', 'J').contains).map(_ => Position(row + 1, col))
+              Try(grid(row + 1)(col)).toOption.filter(Set('|', 'L', 'J').contains).map(_ => Pos(row + 1, col))
 
             val char = (west, east, north, south) match
               case (Some(_), Some(_), None, None) => '-'
@@ -63,13 +58,13 @@ object Day10 extends Aoc2023("input_10.txt"):
             Vertex(char, position, Set(west, east, north, south).flatten).some
           case '.' => None
           case _   => sys.error(s"Unknown char $char")
-    .map(vertex => vertex.position -> vertex)
+    .map(vertex => vertex.pos -> vertex)
     .toMap
 
-  val start: Position = grid.zipWithIndex
+  val start: Pos = grid.zipWithIndex
     .flatMap: (rowArray, row) =>
       rowArray.zipWithIndex.flatMap: (char, col) =>
-        if char == 'S' then Position(row, col).some else None
+        if char == 'S' then Pos(row, col).some else None
     .headOption
     .getOrElse(sys.error("No start found"))
 
@@ -78,12 +73,12 @@ object Day10 extends Aoc2023("input_10.txt"):
 
   // Part 2
   val loop = result.map { (vertex, _) =>
-    vertex.position -> vertex
+    vertex.pos -> vertex
   }.toMap
 
   val empty = grid.indices flatMap { row =>
     grid.head.indices flatMap { col =>
-      val pos = Position(row, col)
+      val pos = Pos(row, col)
       loop.get(pos) match
         case Some(_) => None
         case None    => Some(pos)
@@ -91,7 +86,7 @@ object Day10 extends Aoc2023("input_10.txt"):
   }
 
   // Finds the number of bloccking bordes from the position to the top
-  def rayTraceUp(position: Position): Int = (position.row - 1 to 0 by -1).map { (row: Int) =>
+  def rayTraceUp(position: Pos): Int = (position.row - 1 to 0 by -1).map { (row: Int) =>
     loop.get(position.copy(row = row)).map(_.char) match
       case Some('-') | Some('J') | Some('7') => 1
       case _                                 => 0

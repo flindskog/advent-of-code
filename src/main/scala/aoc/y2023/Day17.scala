@@ -2,7 +2,7 @@ package aoc.y2023
 
 import aoc.data.*
 import aoc.utils.graph.SearchResult
-import aoc.utils.{AStar, Dijkstra, GridUtils}
+import aoc.utils.{AStar, GridUtils}
 
 object Day17 extends Aoc2023("input_17.txt"):
 
