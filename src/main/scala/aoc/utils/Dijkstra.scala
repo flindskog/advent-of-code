@@ -1,11 +1,11 @@
 package aoc.utils
 
+import aoc.utils.graph.SearchResult
+
 import scala.collection.mutable
 
 object Dijkstra {
-  case class Result[T](distances: Map[T, Int], target: Option[(T, Int)])
-
-  def search[T](start: T, isTarget: T => Boolean, neighbors: T => Set[(T, Int)]): Result[T] = {
+  def search[T](start: T, isTarget: T => Boolean, neighbors: T => Set[(T, Int)]): SearchResult[T] = {
     // Mutable data structures are used for performance reasons
     val frontier         = mutable.PriorityQueue.empty[(T, Int)](Ordering.by((_, distance) => -distance))
     val visitedDistances = mutable.Map.empty[T, Int]
@@ -17,11 +17,11 @@ object Dijkstra {
       if (!visitedDistances.contains(node)) {
         visitedDistances += (node -> dist)
         if (isTarget(node)) {
-          return Result(visitedDistances.toMap, Some(node -> dist))
+          return SearchResult.Found(node, dist, visitedDistances.toMap)
         }
-        neighbors(node).foreach { case (n, d) => frontier.enqueue((n, dist + d)) }
+        neighbors(node).foreach((n, d) => frontier.enqueue((n, dist + d)))
       }
     }
-    Result(visitedDistances.toMap, None)
+    SearchResult.NotFound(visitedDistances.toMap)
   }
 }

@@ -1,7 +1,8 @@
 package aoc.y2023
 
 import aoc.data.*
-import aoc.utils.{Dijkstra, GridUtils}
+import aoc.utils.graph.SearchResult
+import aoc.utils.{AStar, Dijkstra, GridUtils}
 
 object Day17 extends Aoc2023("input_17.txt"):
 
@@ -11,8 +12,10 @@ object Day17 extends Aoc2023("input_17.txt"):
 
   val start = Key(Pos(0, 0), Direction.Right, 0)
 
+  val endPos = Pos(grid.length - 1, grid.head.length - 1)
+
   def isTarget(minSteps: Int)(key: Key): Boolean =
-    key.pos == Pos(grid.length - 1, grid.head.length - 1) && key.stepsTakenInDirection >= minSteps
+    key.pos == endPos && key.stepsTakenInDirection >= minSteps
 
   def neighbors(minSteps: Int, maxSteps: Int)(key: Key): Set[(Key, Int)] = {
     val nextAhead =
@@ -35,10 +38,14 @@ object Day17 extends Aoc2023("input_17.txt"):
   }
 
   def solve(minSteps: Int, maxSteps: Int) =
-    Dijkstra.search(start, isTarget(minSteps), neighbors(minSteps, maxSteps))
+    AStar.search(start, isTarget(minSteps), neighbors(minSteps, maxSteps), _.pos.manhattanDistance(endPos))
 
-  val res1 = solve(1, 3)
-  println(res1.target.get._2) // 767
+  solve(1, 3) match {
+    case SearchResult.Found(_, distance, _) => println(distance) // 767
+    case SearchResult.NotFound(distances)   => println(s"Error, not found, distances: $distances")
+  }
 
-  val res2 = solve(4, 10)
-  println(res2.target.get._2) // 904
+  solve(4, 10) match {
+    case SearchResult.Found(_, distance, _) => println(distance) // 904
+    case SearchResult.NotFound(distances)   => println(s"Error, not found, distances: $distances")
+  }
