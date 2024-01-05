@@ -1,7 +1,6 @@
 package aoc.y2023
 
 import aoc.data.{Line3d, Point3d}
-import scala.jdk.CollectionConverters.*
 import com.microsoft.z3.*
 import aoc.syntax.z3.*
 
@@ -37,30 +36,28 @@ object Day24 extends Aoc2023("input_24.txt"):
   println(valid.size) // 20847
 
   // part 2
-  given ctx: Context = new Context(Map("auto_config" -> "true").asJava)
+  {
+    import aoc.syntax.z3real.*
 
-  val solver = ctx.mkSolver()
-  val x0     = "x0".realConstant
-  val y0     = "y0".realConstant
-  val z0     = "z0".realConstant
-  val dx     = "dx".realConstant
-  val dy     = "dy".realConstant
-  val dz     = "dz".realConstant
+    given ctx: Context              = new Context()
+    val solver                      = ctx.mkSolver()
+    val Seq(x0, y0, z0, dx, dy, dz) = mkConstants("x0", "y0", "z0", "dx", "dy", "dz")
 
-  storms.take(3).zipWithIndex.foreach { (lineBigInt, idx) =>
-    val line = lineBigInt.mapType(_.toLong)
-    val t    = s"t$idx".realConstant
+    storms.take(3).zipWithIndex.foreach { (lineBigInt, idx) =>
+      val line = lineBigInt.mapType(_.toLong)
+      val t    = mkConstant(s"t$idx")
 
-    solver.add(x0 + t * dx === line.start.x.real + t * line.direction.x.real)
-    solver.add(y0 + t * dy === line.start.y.real + t * line.direction.y.real)
-    solver.add(z0 + t * dz === line.start.z.real + t * line.direction.z.real)
-    solver.add(t >= 0.real) // Not really necessary, just testing the dsl
-  }
+      solver.add(x0 + t * dx === line.start.x + t * line.direction.x)
+      solver.add(y0 + t * dy === line.start.y + t * line.direction.y)
+      solver.add(z0 + t * dz === line.start.z + t * line.direction.z)
+      solver.add(t >= 0) // Not really necessary, just testing the dsl
+    }
 
-  val status = solver.check()
-  status match {
-    case Status.SATISFIABLE =>
-      println(solver.getModel.eval(x0 + y0 + z0, false)) // 908621716620524
-    case status =>
-      println(s"Couldn't solve: $status")
+    val status = solver.check()
+    status match {
+      case Status.SATISFIABLE =>
+        println(solver.getModel.eval(x0 + y0 + z0, false)) // 908621716620524
+      case status =>
+        println(s"Couldn't solve: $status")
+    }
   }
