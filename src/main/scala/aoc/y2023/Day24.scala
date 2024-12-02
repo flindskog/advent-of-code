@@ -2,7 +2,6 @@ package aoc.y2023
 
 import aoc.data.{Line3d, Point3d}
 import com.microsoft.z3.*
-import aoc.syntax.z3.*
 
 object Day24 extends Aoc2023("input_24.txt"):
   val storms = input.map { line =>
@@ -53,8 +52,7 @@ object Day24 extends Aoc2023("input_24.txt"):
       solver.add(t >= 0) // Not really necessary, just testing the dsl
     }
 
-    val status = solver.check()
-    status match {
+    solver.check() match {
       case Status.SATISFIABLE =>
         println(solver.getModel.eval(x0 + y0 + z0, false)) // 908621716620524
       case status =>

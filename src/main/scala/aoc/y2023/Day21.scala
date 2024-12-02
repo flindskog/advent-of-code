@@ -59,8 +59,7 @@ object Day21 extends Aoc2023("input_21.txt"):
       solver.add(tiles === a * iterations * iterations + b * iterations + c)
     }
 
-  val status = solver.check()
-  status match {
+  solver.check() match {
     case Status.SATISFIABLE =>
       println(solver.getModel.eval(a * iterations * iterations + b * iterations + c, false)) // 610158187362102
     case status =>

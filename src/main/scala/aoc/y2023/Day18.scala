@@ -24,7 +24,7 @@ object Day18 extends Aoc2023("input_18.txt"):
 
   val (part1Instructions, part2Instructions) = input.map { line =>
     val regex                           = """(\w) (\d+) \(#([0-9a-f]{6})\)""".r
-    val regex(direction, length, color) = line
+    val regex(direction, length, color) = line: @unchecked
     (Instruction(parseDirection(direction), length.toInt), parseInstructionFromColor(color))
   }.unzip
 

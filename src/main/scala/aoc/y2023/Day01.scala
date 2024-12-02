@@ -1,5 +1,9 @@
 package aoc.y2023
 
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.LocalDate
+
 object Day01 extends Aoc2023("input_01.txt"):
   val result1 =
     (input.map(_.find(_.isDigit)) zip input.map(_.findLast(_.isDigit))).flatMap { case (f, l) =>
@@ -21,7 +25,8 @@ object Day01 extends Aoc2023("input_01.txt"):
     "seven" -> "7",
     "eight" -> "8",
     "nine"  -> "9",
-    "zero"  -> "0"
+    "zero"  -> "0",
+    "ten"   -> "10"
   )
   val result2 = input
     .map: s =>
@@ -32,3 +37,17 @@ object Day01 extends Aoc2023("input_01.txt"):
       (f + l).toInt
 
   println(result2.sum)
+
+  val test  = Instant.now()
+  val test2 = LocalDateTime.MAX
+  val test3 = LocalDate.EPOCH
+
+  enum Color:
+    case Blue, Red, Green
+
+  def getString(color: Color) = color match
+    case Color.Blue  => "Blue"
+    case Color.Red   => "Red"
+    case Color.Green => "Green"
+
+  val blueColor = Color.Blue
