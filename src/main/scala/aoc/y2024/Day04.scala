@@ -35,4 +35,37 @@ object Day04 extends Aoc2024("input_04.txt"):
     }.sum
   }.sum
 
-  println(result)
+  println(result) // 2378
+
+  def searchCross(grid: Grid[Char], row: Int, col: Int): Int = {
+    val above = ((-1, -1), (-1, 1))
+    val below = ((1, -1), (1, 1))
+    val left = ((-1, -1), (1, -1))
+    val right = ((-1, 1), (1, 1))
+
+    def isChar(char: Char)(d: ((Int, Int), (Int, Int))): Boolean = {
+      val (r1, c1) = d._1
+      val (r2, c2) = d._2
+      grid(row + r1)(col + c1) == char && grid(row + r2)(col + c2) == char
+    }
+
+    val isM = isChar('M')
+    val isS = isChar('S')
+
+    Try {
+      if (grid(row)(col) == 'A' &&
+        ((isM(above) && isS(below)) ||
+        (isM(below) && isS(above)) ||
+        (isM(left) && isS(right)) ||
+        (isM(right) && isS(left)))) 1
+      else 0
+    }.getOrElse(0)
+  }
+
+  val resultCross = grid.indices.map { row =>
+    grid(row).indices.map { col =>
+      searchCross(grid, row, col)
+    }.sum
+  }.sum
+
+  println(resultCross) // 1796
