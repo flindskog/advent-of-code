@@ -16,6 +16,8 @@ case class Pos(row: Int, col: Int) {
   def manhattanDistance(other: Pos): Int =
     Math.abs(row - other.row) + Math.abs(col - other.col)
 
+  def isTouching(other: Pos): Boolean = neighbors.contains(other)
+
   def isInsideGrid[T](grid: Array[Array[T]]): Boolean =
     row >= 0 && row < grid.length && col >= 0 && col < grid(row).length
 
