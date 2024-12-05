@@ -5,24 +5,27 @@ import scala.annotation.tailrec
 object Day05 extends Aoc2024("input_05.txt"):
   val List(rulesStr, dataStr) = input.splitByEmptyLine.toList
 
-  val data = dataStr.map(_.split(",").map(_.toInt).toList)
+  val parseData: String => List[Int] =
+    _.split(",").map(_.toInt).toList
+  val data = dataStr.map(parseData)
 
-  val rules = rulesStr.map: s =>
+  val parseRule: String => (Int, Int) = s =>
     val arr = s.split("""\|""")
     (arr(0).toInt, arr(1).toInt)
+  val rules = rulesStr.map(parseRule)
 
-  val rulesBefore = rules.groupBy((first, _) => first).view.mapValues(_.map((_, last) => last).toSet).toMap
+  val rulesBefore = rules
+    .groupBy((first, _) => first)
+    .view
+    .mapValues(_.map((_, last) => last).toSet)
+    .toMap
 
   def isValid(data: List[Int]): Boolean = {
     @tailrec
     def loop(data: List[Int], seen: Set[Int]): Boolean = data match
       case Nil => true
       case head :: tail =>
-        val mustBeDeforeCheck = rulesBefore.get(head) match
-          case Some(value) => if seen.intersect(value).nonEmpty then false else true
-          case None        => true
-
-        if mustBeDeforeCheck then loop(tail, seen + head)
+        if rulesBefore.get(head).forall(value => seen.intersect(value).isEmpty) then loop(tail, seen + head)
         else false
 
     loop(data, Set.empty)
