@@ -61,4 +61,10 @@ object GridUtils {
   def isInsideGrid[T](grid: Array[Array[T]], pos: Pos): Boolean =
     pos.row >= 0 && pos.row < grid.length && pos.col >= 0 && pos.col < grid(pos.row).length
 
+  def toPosTuples[T](grid: Array[Array[T]]): Array[(Pos, T)] =
+    grid.zipWithIndex.flatMap { case (row, rowIdx) =>
+      row.zipWithIndex.map { case (cell, colIdx) =>
+        Pos(rowIdx, colIdx) -> cell
+      }
+    }
 }
