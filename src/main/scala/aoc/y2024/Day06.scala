@@ -22,7 +22,7 @@ object Day06 extends Aoc2024("input_06.txt"):
   val obstacles = data(Type.Obstacle).toSet
   val start     = data(Type.Start).head
 
-  def walk(grid: Grid[Char], obstacles: Set[Pos], pos: Pos, direction: Direction): LazyList[(Pos, Direction)] =
+  def walk(obstacles: Set[Pos], pos: Pos, direction: Direction): LazyList[(Pos, Direction)] =
     LazyList.unfold((pos, direction)) { (pos, direction) =>
       if pos.isInsideGrid(grid) then
         val nextPos = pos.move(direction)
@@ -32,7 +32,7 @@ object Day06 extends Aoc2024("input_06.txt"):
       else None
     }
 
-  val theWalk = walk(grid, obstacles, start, Direction.Up)
+  val theWalk = walk(obstacles, start, Direction.Up)
 
   val result = theWalk.map(_._1).toSet.size
   println(result) // 5080
@@ -42,11 +42,9 @@ object Day06 extends Aoc2024("input_06.txt"):
     if !obstacles.contains(obstacle) && obstacle.isInsideGrid(grid) then
       val visited = mutable.Set.empty[(Pos, Direction)]
       val maybeInfWalk =
-        walk(grid, obstacles + obstacle, pos, direction.turnRight).dropWhile(visited.add)
+        walk(obstacles + obstacle, pos, direction.turnRight).dropWhile(visited.add)
 
-      if maybeInfWalk.nonEmpty
-      then acc + obstacle
-      else acc
+      if maybeInfWalk.nonEmpty then acc + obstacle else acc
     else acc
   }
 

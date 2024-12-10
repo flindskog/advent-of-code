@@ -47,7 +47,10 @@ object GridUtils {
   def prettyPrint[T](grid: Array[Array[T]]): String =
     grid.map(_.mkString).mkString("\n")
 
-  def find[T](grid: Array[Array[T]], value: T): Option[Pos] = {
+  def find[T](grid: Array[Array[T]], value: T): Option[Pos] =
+    findAll(grid, value).headOption
+
+  def findAll[T](grid: Array[Array[T]], value: T): Seq[Pos] = {
     val numRows = grid.length
     val numCols = grid(0).length
 
@@ -56,7 +59,7 @@ object GridUtils {
       col <- 0 until numCols
       if grid(row)(col) == value
     } yield Pos(row, col)
-  }.headOption
+  }
 
   def isInsideGrid[T](grid: Array[Array[T]], pos: Pos): Boolean =
     pos.row >= 0 && pos.row < grid.length && pos.col >= 0 && pos.col < grid(pos.row).length
