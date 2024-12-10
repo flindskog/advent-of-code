@@ -42,7 +42,7 @@ object Day06 extends Aoc2024("input_06.txt"):
     if !obstacles.contains(obstacle) && obstacle.isInsideGrid(grid) then
       val visited = mutable.Set.empty[(Pos, Direction)]
       val maybeInfWalk =
-        walk(obstacles + obstacle, pos, direction.turnRight).dropWhile(visited.add)
+        walk(obstacles + obstacle, start, Direction.Up).dropWhile(visited.add)
 
       if maybeInfWalk.nonEmpty then acc + obstacle else acc
     else acc
@@ -50,4 +50,8 @@ object Day06 extends Aoc2024("input_06.txt"):
 
   val result2 = infinityObstacles - start
 
-  println(result2.size) // 1847 too low, not: 2049, 1950, 1990
+  println(result2.size) // 1919
+
+  /*
+  Thank you @ikr for the insights!
+   */
