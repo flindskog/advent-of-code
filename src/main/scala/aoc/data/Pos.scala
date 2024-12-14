@@ -45,6 +45,9 @@ case class Pos(row: Int, col: Int) {
   @targetName("minusPos")
   def -(other: Pos): Pos = Pos(row - other.row, col - other.col)
 
+  @targetName("modPos")
+  def %(other: Pos): Pos = Pos(row % other.row, col % other.col)
+
   @targetName("unaryMinus")
   def unary_- : Pos = Pos(-row, -col)
 
