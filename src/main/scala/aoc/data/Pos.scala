@@ -68,7 +68,7 @@ object Pos {
   def drawAsGrid(positions: Set[Pos], minRow: Int, maxRow: Int, minCol: Int, maxCol: Int): String =
     drawAsGrid(Map('#' -> positions), minRow: Int, maxRow: Int, minCol: Int, maxCol: Int)
 
-  def drawAsGrid(objects: Map[Char, Set[Pos]]): String = {
+  def drawAsGrid(objects: Map[Char, Set[Pos]]): String =
     val rows   = objects.values.flatMap(_.map(_.row))
     val cols   = objects.values.flatMap(_.map(_.col))
     val minRow = rows.min
@@ -76,8 +76,7 @@ object Pos {
     val minCol = cols.min
     val maxCol = cols.max
     drawAsGrid(objects, minRow, maxRow, minCol, maxCol)
-  }
-
+  
   def drawAsGrid(objects: Map[Char, Set[Pos]], minRow: Int, maxRow: Int, minCol: Int, maxCol: Int): String =
     (minRow to maxRow)
       .map(row =>
@@ -91,7 +90,7 @@ object Pos {
       )
       .mkString("\n")
 
-  def floodFill(border: Set[Pos], start: Pos, max: Int): Option[Set[Pos]] = {
+  def floodFill(border: Set[Pos], start: Pos, max: Int): Option[Set[Pos]] =
     @tailrec
     def loop(visited: Set[Pos], toVisit: Set[Pos]): Option[Set[Pos]] =
       if (toVisit.isEmpty) Some(visited)
@@ -106,6 +105,5 @@ object Pos {
       }
 
     loop(Set.empty, Set(start)).map(_ ++ border)
-  }
 
 }

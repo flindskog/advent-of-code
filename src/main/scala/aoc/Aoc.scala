@@ -14,11 +14,11 @@ trait Aoc(fileName: String) extends AllSyntax with App:
   type Grid[T] = Array[Array[T]]
 
   extension (input: LazyList[String]) {
-    def splitByEmptyLine: LazyList[List[String]] =
+    def splitByEmptyLine: LazyList[LazyList[String]] =
       input
-        .foldLeft(LazyList(List.empty[String])) {
-          case (acc, "")   => List.empty[String] #:: acc
-          case (acc, line) => (line :: acc.head) #:: acc.tail
+        .foldLeft(LazyList(LazyList.empty[String])) {
+          case (acc, "")   => LazyList.empty[String] #:: acc
+          case (acc, line) => (line #:: acc.head) #:: acc.tail
         }
         .map(_.reverse)
         .reverse

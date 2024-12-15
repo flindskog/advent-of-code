@@ -1,9 +1,6 @@
 package aoc.y2022
 
-import aoc.data.{Direction, Pos}
-
 import scala.annotation.tailrec
-import scala.util.Try
 
 object Day10 extends Aoc2022("input_10.txt"):
   enum Instruction:

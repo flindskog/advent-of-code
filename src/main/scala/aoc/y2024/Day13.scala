@@ -11,7 +11,7 @@ object Day13 extends Aoc2024("input_13.txt"):
   case class ClawMachine(a: Pos, b: Pos, prize: Pos)
 
   val machines = input.splitByEmptyLine.map:
-    case List(aRegex(xa, ya), bRegex(xb, yb), priceRegex(xp, yp)) =>
+    case LazyList(aRegex(xa, ya), bRegex(xb, yb), priceRegex(xp, yp)) =>
       ClawMachine(Pos(xa.toInt, ya.toInt), Pos(xb.toInt, yb.toInt), Pos(xp.toInt, yp.toInt))
     case _ => sys.error("Invalid input")
 
