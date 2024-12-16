@@ -1,27 +1,41 @@
 package aoc.utils
 
-import aoc.utils.graph.SearchResult
-
 import scala.collection.mutable
 
 object Dijkstra {
-  def search[T](start: T, isTarget: T => Boolean, neighbors: T => Set[(T, Int)]): SearchResult[T] = {
-    // Mutable data structures are used for performance reasons
-    val frontier         = mutable.PriorityQueue.empty[(T, Int)](Ordering.by((_, distance) => -distance))
-    val visitedDistances = mutable.Map.empty[T, Int]
+  def search[T](start: T, isTarget: T => Boolean, neighbors: T => Set[(T, Int)]): GraphSearchResult[T] = {
+    val frontier     = mutable.PriorityQueue.empty[(T, Int)](Ordering.by((_, distance) => -distance))
+    val visited      = mutable.Map.empty[T, Int]
+    val predecessors = mutable.Map.empty[T, T]
 
     frontier.enqueue((start, 0))
 
     while (frontier.nonEmpty) {
       val (node, dist) = frontier.dequeue()
-      if (!visitedDistances.contains(node)) {
-        visitedDistances += (node -> dist)
+      if (!visited.contains(node)) {
+        visited += (node -> dist)
         if (isTarget(node)) {
-          return SearchResult.Found(node, dist, visitedDistances.toMap)
+          val path = reconstructPath(predecessors, start, node)
+          return GraphSearchResult.Found(node, dist, path)
         }
-        neighbors(node).foreach((n, d) => frontier.enqueue((n, dist + d)))
+        neighbors(node).foreach { case (n, d) =>
+          if (!visited.contains(n) || dist + d < visited(n)) {
+            frontier.enqueue((n, dist + d))
+            predecessors += (n -> node)
+          }
+        }
       }
     }
-    SearchResult.NotFound(visitedDistances.toMap)
+    GraphSearchResult.NotFound()
+  }
+
+  private def reconstructPath[T](predecessors: mutable.Map[T, T], start: T, target: T): Seq[T] = {
+    var path    = List(target)
+    var current = target
+    while (current != start) {
+      current = predecessors(current)
+      path = current :: path
+    }
+    path
   }
 }

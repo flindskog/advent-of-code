@@ -1,7 +1,5 @@
 package aoc.utils
 
-import aoc.utils.graph.SearchResult
-
 import scala.collection.mutable
 
 type Heuristics[T] = T => Int
@@ -14,23 +12,43 @@ object AStar {
       isTarget: T => Boolean,
       neighbors: T => Set[(T, Int)],
       heuristics: Heuristics[T]
-  ): SearchResult[T] = {
+  ): GraphSearchResult[T] = {
     // Mutable data structures are used for performance reasons
     val frontier         = mutable.PriorityQueue.empty[State[T]](Ordering.by(-_.heuristicValue))
     val visitedDistances = mutable.Map.empty[T, Int]
+    val predecessors     = mutable.Map.empty[T, T]
 
     frontier.enqueue(State(start, 0, 0))
 
     while (frontier.nonEmpty) {
-      val State(node, dist, _) = frontier.dequeue()
+      val State(node, distance, _) = frontier.dequeue()
       if (!visitedDistances.contains(node)) {
-        visitedDistances += (node -> dist)
+        visitedDistances += (node -> distance)
         if (isTarget(node)) {
-          return SearchResult.Found(node, dist, visitedDistances.toMap)
+          val path = reconstructPath(predecessors, start, node)
+          return GraphSearchResult.Found(node, distance, path)
         }
-        neighbors(node).foreach((n, d) => frontier.enqueue(State(n, dist + d, dist + d + heuristics(n))))
+        neighbors(node).foreach { case (n, d) =>
+          val newDistance    = distance + d
+          val heuristicValue = newDistance + heuristics(n)
+          if (!visitedDistances.contains(n) || newDistance < visitedDistances(n)) {
+            frontier.enqueue(State(n, newDistance, heuristicValue))
+            predecessors += (n -> node)
+          }
+        }
       }
     }
-    SearchResult.NotFound(visitedDistances.toMap)
+
+    GraphSearchResult.NotFound()
+  }
+
+  private def reconstructPath[T](predecessors: mutable.Map[T, T], start: T, target: T): Seq[T] = {
+    var path    = List(target)
+    var current = target
+    while (current != start) {
+      current = predecessors(current)
+      path = current :: path
+    }
+    path
   }
 }

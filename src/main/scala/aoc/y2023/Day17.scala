@@ -1,8 +1,7 @@
 package aoc.y2023
 
 import aoc.data.*
-import aoc.utils.graph.SearchResult
-import aoc.utils.{AStar, GridUtils}
+import aoc.utils.{AStar, GraphSearchResult, GridUtils}
 
 object Day17 extends Aoc2023("input_17.txt"):
 
@@ -41,11 +40,11 @@ object Day17 extends Aoc2023("input_17.txt"):
     AStar.search(start, isTarget(minSteps), neighbors(minSteps, maxSteps), _.pos.manhattanDistance(endPos))
 
   solve(1, 3) match {
-    case SearchResult.Found(_, distance, _) => println(distance) // 767
-    case SearchResult.NotFound(distances)   => println(s"Error, not found, distances: $distances")
+    case GraphSearchResult.Found(_, distance, _) => println(distance) // 767
+    case GraphSearchResult.NotFound()   => println(s"Error, not found")
   }
 
   solve(4, 10) match {
-    case SearchResult.Found(_, distance, _) => println(distance) // 904
-    case SearchResult.NotFound(distances)   => println(s"Error, not found, distances: $distances")
+    case GraphSearchResult.Found(_, distance, _) => println(distance) // 904
+    case GraphSearchResult.NotFound()   => println(s"Error, not found")
   }
