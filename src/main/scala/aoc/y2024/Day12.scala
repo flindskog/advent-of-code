@@ -36,3 +36,32 @@ object Day12 extends Aoc2024("input_12.txt"):
 
   val result = grouped.map(price).sum
   println(result) // 1485656
+
+  def countSides(group: Set[Pos]): Int =
+    group.toSeq
+      .map: pos =>
+        val over =
+          !group.contains(pos.move(Direction.Up)) && (!group.contains(pos.move(Direction.Left)) || group.contains(
+            pos.move(Direction.Left).move(Direction.Up)
+          ))
+
+        val under =
+          !group.contains(pos.move(Direction.Down)) && (!group.contains(pos.move(Direction.Left)) || group.contains(
+            pos.move(Direction.Left).move(Direction.Down)
+          ))
+
+        val left =
+          !group.contains(pos.move(Direction.Left)) && (!group.contains(pos.move(Direction.Down)) || group.contains(
+            pos.move(Direction.Down).move(Direction.Left)
+          ))
+
+        val right =
+          !group.contains(pos.move(Direction.Right)) && (!group.contains(pos.move(Direction.Down)) || group.contains(
+            pos.move(Direction.Down).move(Direction.Right)
+          ))
+
+        Seq(over, under, left, right).count(identity)
+      .sum
+
+  val result2 = grouped.map(g => countSides(g) * area(g)).sum
+  println(result2) //
