@@ -64,4 +64,4 @@ object Day12 extends Aoc2024("input_12.txt"):
       .sum
 
   val result2 = grouped.map(g => countSides(g) * area(g)).sum
-  println(result2) //
+  println(result2) // 899196

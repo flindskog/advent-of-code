@@ -1,7 +1,7 @@
 package aoc.y2024
 
 import aoc.data.Pos
-import aoc.utils.{Dijkstra, GraphSearchResult}
+import aoc.utils.{GraphSearch, GraphSearchResult}
 
 import scala.annotation.tailrec
 
@@ -17,14 +17,12 @@ object Day18 extends Aoc2024("input_18.txt"):
   val noFallen  = 1024
   val fallen    = fallenBytes.take(noFallen).toSet
 
-  def neighbors(fallen: Set[Pos])(pos: Pos): Set[(Pos, Int)] =
+  def neighbors(fallen: Set[Pos])(pos: Pos): Set[Pos] =
     pos.adjacentNeighbors
       .filter(!fallen.contains(_))
       .filter(p => p.row >= 0 && p.row <= xBoundary && p.col >= 0 && p.col <= yBoundary)
-      .map(_ -> 1)
 
-  Dijkstra
-    .search(startPos, _ == endPos, neighbors(fallen)) match
+  GraphSearch.bfs(startPos, _ == endPos, neighbors(fallen)) match
     case GraphSearchResult.Found(_, distance, _) => println(distance) // 436
     case GraphSearchResult.NotFound()            => println("Error, not found")
 
@@ -32,8 +30,7 @@ object Day18 extends Aoc2024("input_18.txt"):
     @tailrec
     def loop(noFallen: Int): Option[Pos] =
       val fallen = fallenBytes.take(noFallen).toSet
-      Dijkstra
-        .search(startPos, _ == endPos, neighbors(fallen)) match
+      GraphSearch.bfs(startPos, _ == endPos, neighbors(fallen)) match
         case GraphSearchResult.Found(_, _, _) => loop(noFallen + 1)
         case GraphSearchResult.NotFound()     => Some(fallenBytes(noFallen - 1))
 

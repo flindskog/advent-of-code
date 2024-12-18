@@ -1,7 +1,7 @@
 package aoc.y2024
 
 import aoc.data.{Direction, Pos}
-import aoc.utils.{Dijkstra, GraphSearchResult}
+import aoc.utils.{GraphSearch, GraphSearchResult}
 
 object Day16 extends Aoc2024("input_16.txt"):
   case class Tile(position: Pos, direction: Direction) {
@@ -11,7 +11,7 @@ object Day16 extends Aoc2024("input_16.txt"):
   }
 
   val data = input.toGrid(identity).toPosTuples.filter(_._2 != '#')
-  val maze = data.filter(_._2 != '#').map(_._1).toSet
+  val maze = data.map(_._1).toSet
 
   val startPosition = data.find(_._2 == 'S') match
     case Some((pos, _)) => pos
@@ -21,7 +21,7 @@ object Day16 extends Aoc2024("input_16.txt"):
   val endPosition = data.find(_._2 == 'E') match
     case Some((pos, _)) => pos
     case None           => throw new Exception("No end found")
-  def end(tile: Tile): Boolean = tile.position == endPosition
+  def isEnd(tile: Tile): Boolean = tile.position == endPosition
 
   def neighbors(tile: Tile): Set[(Tile, Int)] =
     Set(
@@ -30,7 +30,7 @@ object Day16 extends Aoc2024("input_16.txt"):
       tile.move      -> 1
     ).filter((t, _) => maze.contains(t.position))
 
-  val result = Dijkstra.search(start, end, neighbors)
+  val result = GraphSearch.dijkstra(start, isEnd, neighbors)
 
   result match {
     case GraphSearchResult.Found(_, distance, _) => println(distance) // 94444
