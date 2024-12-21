@@ -1,6 +1,6 @@
 package aoc.y2024
 
-import aoc.data.Pos
+import aoc.data.{GridBucket, Pos}
 import aoc.utils.GraphSearch
 import aoc.utils.GraphSearchResult.{Found, NotFound}
 
@@ -24,19 +24,21 @@ object Day20 extends Aoc2024("input_20.txt"):
     case Found(_, _, path) => path.zipWithIndex
     case NotFound()        => throw new Exception("No path found")
 
-  val pathMap = pathway.toMap
+  val pathMap    = pathway.toMap
+  val gridBucket = GridBucket(10)(pathway.map(_._1).toSet)
 
   def findCheats(minSave: Int, maxDist: Int): Int =
-    val (_, count) = pathway.foldLeft((pathMap, 0)) { case ((remainingPathMap, accCount), (currentPos, currentSteps)) =>
-      val cheats = remainingPathMap.filter: (pos, steps) =>
-        val dst   = pos.manhattanDistance(currentPos)
-        val saved = steps - currentSteps - dst
-        saved >= minSave && dst <= maxDist
+    pathway.foldLeft(0) { case (accCount, (currentPos, currentSteps)) =>
+      val cheats = gridBucket
+        .findWithinDistance(currentPos, maxDist)
+        .filter: pos =>
+          val steps = pathMap(pos)
+          val dst   = pos.manhattanDistance(currentPos)
+          val saved = steps - currentSteps - dst
+          saved >= minSave && dst <= maxDist
 
-      (remainingPathMap - currentPos, accCount + cheats.size)
+      accCount + cheats.size
     }
-
-    count
 
   println(findCheats(100, 2))  // 1463
   println(findCheats(100, 20)) // 985332
