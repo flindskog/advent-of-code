@@ -76,7 +76,7 @@ object Pos {
     val minCol = cols.min
     val maxCol = cols.max
     drawAsGrid(objects, minRow, maxRow, minCol, maxCol)
-  
+
   def drawAsGrid(objects: Map[Char, Set[Pos]], minRow: Int, maxRow: Int, minCol: Int, maxCol: Int): String =
     (minRow to maxRow)
       .map(row =>

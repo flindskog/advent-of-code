@@ -1,7 +1,7 @@
 package aoc.y2024
 
 import aoc.data.{Direction, Pos}
-import aoc.utils.{GraphSearch, GraphSearchResult}
+import aoc.utils.{Dijkstra, GraphSearch, GraphSearchResult, SeqGraphSearchResult}
 
 object Day16 extends Aoc2024("input_16.txt"):
   case class Tile(position: Pos, direction: Direction) {
@@ -36,3 +36,6 @@ object Day16 extends Aoc2024("input_16.txt"):
     case GraphSearchResult.Found(_, distance, _) => println(distance) // 94444
     case GraphSearchResult.NotFound()            => println("Error, not found")
   }
+
+  val (_, result2) = Dijkstra.searchAllPaths(start, isEnd, neighbors)
+  println(result2.flatten.toSet.map(_.position).size) // 502
