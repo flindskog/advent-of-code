@@ -2,10 +2,20 @@ package aoc.data
 
 import scala.annotation.tailrec
 import scala.collection.immutable.Queue
+import scala.collection.mutable.ListBuffer
 
 case class UndirectedEdge[T](a: T, b: T)
 
 case class UndirectedGraph[T](edges: Set[UndirectedEdge[T]]) {
+
+  val vertices: Set[T] = edges.flatMap(e => Set(e.a, e.b))
+
+  val neighbours: Map[T, Set[T]] =
+    edges.foldLeft(Map[T, Set[T]]()) { (acc, edge) =>
+      acc
+        .updatedWith(edge.a)(_.map(_ + edge.b).orElse(Some(Set(edge.b))))
+        .updatedWith(edge.b)(_.map(_ + edge.a).orElse(Some(Set(edge.a))))
+    }
 
   def addEdge(vertex1: T, vertex2: T): UndirectedGraph[T] =
     UndirectedGraph(edges + UndirectedEdge(vertex1, vertex2))
@@ -42,11 +52,8 @@ case class UndirectedGraph[T](edges: Set[UndirectedEdge[T]]) {
         case ((vertex, distance), restQueue) =>
           if (vertex == to) distance
           else {
-            val neighbours = edges
-              .filter(edge => edge.a == vertex || edge.b == vertex)
-              .map(edge => if (edge.a == vertex) edge.b else edge.a)
-              .diff(visited)
-            val newQueue = restQueue.enqueueAll(neighbours.map(neighbour => (neighbour, distance + 1)))
+            val unvisitedNeighbours = neighbours(vertex).diff(visited).diff(visited)
+            val newQueue = restQueue.enqueueAll(unvisitedNeighbours.map(neighbour => (neighbour, distance + 1)))
             loop(newQueue, visited + vertex)
           }
       }
@@ -69,11 +76,8 @@ case class UndirectedGraph[T](edges: Set[UndirectedEdge[T]]) {
         case head :: tail =>
           if (visited.contains(head)) loop(tail, visited, component)
           else {
-            val neighbours = edges
-              .filter(edge => edge.a == head || edge.b == head)
-              .map(edge => if (edge.a == head) edge.b else edge.a)
-              .diff(visited)
-            loop(neighbours.toList ++ tail, visited + head, component + head)
+            val unvisitedNeighbours = neighbours(head).diff(visited)
+            loop(unvisitedNeighbours.toList ++ tail, visited + head, component + head)
           }
       }
 
@@ -88,29 +92,31 @@ case class UndirectedGraph[T](edges: Set[UndirectedEdge[T]]) {
     loop2(edges.flatMap(edge => Set(edge.a, edge.b)), List())
   }
 
-
-  /**
-   * Finds the largest cliques with the BronKerbosch algorithm
-   */
-  def largestClique: List[Set[T]] = {
-    @tailrec
+  def maximalCliques: List[Set[T]] = {
     def bronKerbosch(
         r: Set[T],
-        p: Set[T],
-        x: Set[T],
-        cliques: List[Set[T]]
-    ): List[Set[T]] =
-      if (p.isEmpty && x.isEmpty) r :: cliques
-      else {
-        val pivot = p.union(x).maxBy(vertex => p.intersect(edges(vertex)).size)
-        val newR  = r + pivot
-        val newP  = p.intersect(edges(pivot))
-        val newX  = x.intersect(edges(pivot))
-        bronKerbosch(newR, newP, newX, cliques) ++
-          bronKerbosch(r, p - pivot, x + pivot, cliques)
+        pStart: Set[T],
+        xStart: Set[T],
+        result: ListBuffer[Set[T]]
+    ): Unit = {
+      var p = pStart
+      var x = xStart
+      if (p.isEmpty && x.isEmpty) {
+        result.append(r)
+      } else {
+        val pivot = p.union(x).head
+        for (v <- p.diff(neighbours(pivot))) {
+          val Nv = neighbours(v)
+          bronKerbosch(r + v, p.intersect(Nv), x.intersect(Nv), result)
+          x += v
+          p -= v
+        }
       }
+    }
 
-    bronKerbosch(Set(), edges.flatMap(edge => Set(edge.a, edge.b)), Set(), List())
+    val result = ListBuffer[Set[T]]()
+    bronKerbosch(Set(), vertices, Set(), result)
+    result.toList
   }
 }
 
