@@ -87,6 +87,31 @@ case class UndirectedGraph[T](edges: Set[UndirectedEdge[T]]) {
 
     loop2(edges.flatMap(edge => Set(edge.a, edge.b)), List())
   }
+
+
+  /**
+   * Finds the largest cliques with the BronKerbosch algorithm
+   */
+  def largestClique: List[Set[T]] = {
+    @tailrec
+    def bronKerbosch(
+        r: Set[T],
+        p: Set[T],
+        x: Set[T],
+        cliques: List[Set[T]]
+    ): List[Set[T]] =
+      if (p.isEmpty && x.isEmpty) r :: cliques
+      else {
+        val pivot = p.union(x).maxBy(vertex => p.intersect(edges(vertex)).size)
+        val newR  = r + pivot
+        val newP  = p.intersect(edges(pivot))
+        val newX  = x.intersect(edges(pivot))
+        bronKerbosch(newR, newP, newX, cliques) ++
+          bronKerbosch(r, p - pivot, x + pivot, cliques)
+      }
+
+    bronKerbosch(Set(), edges.flatMap(edge => Set(edge.a, edge.b)), Set(), List())
+  }
 }
 
 object UndirectedGraph {

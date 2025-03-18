@@ -1,7 +1,7 @@
 package aoc.y2024
 
 import aoc.data.{Direction, Pos}
-import aoc.utils.{Dijkstra, GraphSearch, GraphSearchResult, SeqGraphSearchResult}
+import aoc.utils.{Dijkstra, GraphSearch, GraphSearchResult}
 
 object Day16 extends Aoc2024("input_16.txt"):
   case class Tile(position: Pos, direction: Direction) {
