@@ -106,8 +106,8 @@ case class UndirectedGraph[T](edges: Set[UndirectedEdge[T]]) {
       } else {
         val pivot = p.union(x).head
         for (v <- p.diff(neighbours(pivot))) {
-          val Nv = neighbours(v)
-          bronKerbosch(r + v, p.intersect(Nv), x.intersect(Nv), result)
+          val vNeighbours = neighbours(v)
+          bronKerbosch(r + v, p.intersect(vNeighbours), x.intersect(vNeighbours), result)
           x += v
           p -= v
         }
