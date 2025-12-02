@@ -46,7 +46,7 @@ object Day24 extends Aoc2024("input_24.txt"):
           case Operation.Xor => value1 ^ value2
         (result, circuit2.updated(connection.output, Value(result)))
 
-  val outputs = circuit.keys
+  val (_, outputs) = circuit.keys
     .filter(_.startsWith("z"))
     .toList
     .sorted
@@ -54,7 +54,6 @@ object Day24 extends Aoc2024("input_24.txt"):
       val (value, newCircuit) = evaluate(name, circuit)
       (newCircuit, value :: outputs)
     }
-    ._2
 
   val result = java.lang.Long.parseLong(outputs.map(v => if v then "1" else "0").mkString, 2)
 
